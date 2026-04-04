@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game Developer Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:         #1a1028;
+      --surface:    #231535;
+      --border:     #3a2554;
+      --text:       #ede8f8;
+      --muted:      #a899c4;
+      --accent:     #caaaf0;
+      --tag-bg:     #2e1d47;
+      --tag-text:   #caaaf0;
+      --heading-font: 'Playfair Display', serif;
+      --body-font:    'Nunito', sans-serif;
+      --radius:     8px;
+      --shadow:     0 2px 16px rgba(0,0,0,0.35);
+      --transition: 0.25s ease;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--body-font); font-size: 16px; line-height: 1.7; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { max-width: 100%; display: block; }
+    .container { max-width: 960px; margin: 0 auto; padding: 0 28px; }
+    section { padding: 72px 0; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; background: var(--surface); border-bottom: 1px solid var(--border); }
+    .nav-inner { max-width: 960px; margin: 0 auto; padding: 0 28px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-family: var(--heading-font); font-size: 1.1rem; color: var(--text); }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 0.88rem; color: var(--muted); transition: color var(--transition); }
+    .nav-links a:hover { color: var(--accent); text-decoration: none; }
+
+    /* HERO */
+    .hero { background: var(--surface); border-bottom: 1px solid var(--border); padding: 72px 0 64px; }
+    .hero-inner { max-width: 960px; margin: 0 auto; padding: 0 28px; display: flex; align-items: center; gap: 48px; }
+    .brand-image-wrap { flex-shrink: 0; width: 120px; height: 120px; border-radius: 50%; overflow: hidden; border: 2px solid var(--border); background: var(--bg); }
+    .brand-image-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .brand-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-family: var(--heading-font); font-size: 2rem; color: var(--muted); }
+    .hero-text h1 { font-family: var(--heading-font); font-size: clamp(2rem, 5vw, 3rem); font-weight: 400; line-height: 1.15; margin-bottom: 12px; }
+    .hero-text p { color: var(--muted); font-size: 1rem; max-width: 480px; margin-bottom: 24px; }
+    .btn { display: inline-block; padding: 11px 26px; background: var(--accent); color: #1a1028; font-size: 0.88rem; font-weight: 600; border-radius: var(--radius); transition: opacity var(--transition); }
+    .btn:hover { opacity: 0.85; text-decoration: none; }
+    @media (max-width: 580px) { .hero-inner { flex-direction: column; gap: 24px; } }
+
+    /* SECTION HEADINGS */
+    .section-header { margin-bottom: 40px; }
+    .section-header h2 { font-family: var(--heading-font); font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: 400; margin-bottom: 6px; }
+    .section-header p { color: var(--muted); font-size: 0.93rem; }
+
+    /* GAME CARDS */
+    .games-grid { display: grid; gap: 32px; }
+    .game-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: box-shadow var(--transition); }
+    .game-card:hover { box-shadow: 0 4px 24px rgba(0,0,0,0.11); }
+    .game-header { padding: 24px 28px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+    .game-title { font-family: var(--heading-font); font-size: 1.35rem; font-weight: 400; }
+    .game-genre { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--tag-text); background: var(--tag-bg); padding: 3px 10px; border-radius: 4px; }
+    .game-body { padding: 24px 28px; }
+    .media-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+
+    /* VIDEOS */
+    .videos-wrap { display: grid; gap: 14px; margin-bottom: 24px; }
+    .videos-wrap.two-cols { grid-template-columns: 1fr 1fr; }
+    @media (max-width: 600px) { .videos-wrap.two-cols { grid-template-columns: 1fr; } }
+    .video-container { position: relative; padding-bottom: 56.25%; height: 0; background: var(--bg); border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
+    .video-container iframe, .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+    /* SCREENSHOTS */
+    .screenshots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin-bottom: 24px; }
+    .screenshot-thumb { aspect-ratio: 16/9; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; cursor: pointer; transition: border-color var(--transition); }
+    .screenshot-thumb:hover { border-color: var(--accent); }
+    .screenshot-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .screenshot-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--muted); }
+
+    /* INFO PANELS */
+    .game-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 580px) { .game-info-grid { grid-template-columns: 1fr; } }
+    .info-box { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 16px 18px; }
+    .info-box .info-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    .info-box p, .info-box ul { font-size: 0.91rem; color: var(--text); line-height: 1.65; }
+    .info-box ul { padding-left: 16px; }
+    .info-box li { margin-bottom: 3px; }
+
+    /* LIGHTBOX */
+    .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 90vw; max-height: 85vh; border-radius: 6px; }
+    .lightbox-close { position: absolute; top: 18px; right: 24px; font-size: 1.8rem; color: #fff; cursor: pointer; line-height: 1; opacity: 0.8; }
+    .lightbox-close:hover { opacity: 1; }
+
+    /* ABOUT */
+    #about { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+    @media (max-width: 640px) { .about-grid { grid-template-columns: 1fr; } }
+    .about-text p { color: var(--muted); margin-bottom: 14px; font-size: 0.95rem; }
+    .skills-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+    .skill-tag { font-size: 0.8rem; font-weight: 500; padding: 5px 12px; border: 1px solid var(--border); border-radius: 4px; color: var(--text); background: var(--bg); }
+
+    /* CONTACT */
+    #contact { text-align: center; }
+    .contact-card { max-width: 500px; margin: 0 auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 40px 36px; box-shadow: var(--shadow); }
+    .contact-card p { color: var(--muted); margin-bottom: 28px; font-size: 0.95rem; }
+    .contact-email-link { display: inline-block; padding: 11px 28px; background: var(--accent); color: #1a1028; font-size: 0.9rem; font-weight: 600; border-radius: var(--radius); transition: opacity var(--transition); }
+    .contact-email-link:hover { opacity: 0.85; text-decoration: none; }
+
+    /* FOOTER */
+    footer { padding: 24px; text-align: center; font-size: 0.8rem; color: var(--muted); border-top: 1px solid var(--border); }
+
+    /* SCROLL REVEAL */
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+  <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <span class="lightbox-close" onclick="closeLightbox()">&#x2715;</span>
+    <img id="lightbox-img" src="" alt="Screenshot enlarged" />
+  </div>
+
+  <!-- NAV — ★ EDIT: change "Your Name" -->
+  <nav>
+    <div class="nav-inner">
+      <span class="nav-logo">Your Name</span>
+      <ul class="nav-links">
+        <li><a href="#games">Games</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO — ★ EDIT: name, tagline, brand image -->
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="brand-image-wrap">
+        <!-- Replace the div below with: <img src="your-photo.jpg" alt="Your Name" /> -->
+        <div class="brand-placeholder">YN</div>
+      </div>
+      <div class="hero-text">
+        <h1>Your Name</h1>
+        <p>Game Developer specialising in [e.g. gameplay programming, level design]. Based in [City]. Open to opportunities.</p>
+        <a href="#games" class="btn">View Portfolio</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAMES -->
+  <section id="games">
+    <div class="container">
+      <div class="section-header">
+        <h2>Games</h2>
+        <p>A selection of projects I've contributed to.</p>
+      </div>
+      <div class="games-grid">
+
+        <!-- GAME 1 — ★ EDIT everything marked below -->
+        <div class="game-card reveal">
+          <div class="game-header">
+            <h3 class="game-title">Game Title One</h3>         <!-- ★ title -->
+            <span class="game-genre">Action RPG</span>         <!-- ★ genre -->
+          </div>
+          <div class="game-body">
+            <p class="media-label">Gameplay</p>
+            <div class="videos-wrap">
+              <div class="video-container">
+                <!-- ★ Replace VIDEO_ID with the YouTube ID (e.g. dQw4w9WgXcQ) -->
+                <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen title="Game 1"></iframe>
+              </div>
+            </div>
+            <p class="media-label">Screenshots</p>
+            <div class="screenshots-grid">
+              <!-- ★ Replace screenshot-placeholder divs with <img src="file.jpg" alt="..."> and update onclick paths -->
+              <div class="screenshot-thumb" onclick="openLightbox('game1-shot1.jpg')"><div class="screenshot-placeholder">Screenshot 1</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('game1-shot2.jpg')"><div class="screenshot-placeholder">Screenshot 2</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('game1-shot3.jpg')"><div class="screenshot-placeholder">Screenshot 3</div></div>
+            </div>
+            <div class="game-info-grid">
+              <div class="info-box">
+                <p class="info-label">About</p>
+                <p>A brief description of the game — its premise, genre, platform, and what makes it interesting to play.</p> <!-- ★ -->
+              </div>
+              <div class="info-box">
+                <p class="info-label">My Role</p>
+                <ul> <!-- ★ -->
+                  <li>Core gameplay systems</li>
+                  <li>Enemy AI</li>
+                  <li>Level design</li>
+                  <li>UI implementation</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GAME 2 — two videos side-by-side example -->
+        <div class="game-card reveal">
+          <div class="game-header">
+            <h3 class="game-title">Game Title Two</h3>
+            <span class="game-genre">Puzzle Platformer</span>
+          </div>
+          <div class="game-body">
+            <p class="media-label">Gameplay</p>
+            <div class="videos-wrap two-cols">
+              <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen title="Game 2 clip 1"></iframe>
+              </div>
+              <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen title="Game 2 clip 2"></iframe>
+              </div>
+            </div>
+            <p class="media-label">Screenshots</p>
+            <div class="screenshots-grid">
+              <div class="screenshot-thumb" onclick="openLightbox('game2-shot1.jpg')"><div class="screenshot-placeholder">Screenshot 1</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('game2-shot2.jpg')"><div class="screenshot-placeholder">Screenshot 2</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('game2-shot3.jpg')"><div class="screenshot-placeholder">Screenshot 3</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('game2-shot4.jpg')"><div class="screenshot-placeholder">Screenshot 4</div></div>
+            </div>
+            <div class="game-info-grid">
+              <div class="info-box">
+                <p class="info-label">About</p>
+                <p>A brief description of this game — its concept, platform, and core loop.</p>
+              </div>
+              <div class="info-box">
+                <p class="info-label">My Role</p>
+                <ul>
+                  <li>Physics puzzle design</li>
+                  <li>Procedural level generation</li>
+                  <li>Character animation</li>
+                  <li>Steam integration</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GAME 3 -->
+        <div class="game-card reveal">
+          <div class="game-header">
+            <h3 class="game-title">Game Title Three</h3>
+            <span class="game-genre">Survival Horror</span>
+          </div>
+          <div class="game-body">
+            <p class="media-label">Gameplay</p>
+            <div class="videos-wrap">
+              <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen title="Game 3"></iframe>
+              </div>
+            </div>
+            <p class="media-label">Screenshots</p>
+            <div class="screenshots-grid">
+              <div class="screenshot-thumb" onclick="openLightbox('game3-shot1.jpg')"><div class="screenshot-placeholder">Screenshot 1</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('game3-shot2.jpg')"><div class="screenshot-placeholder">Screenshot 2</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('game3-shot3.jpg')"><div class="screenshot-placeholder">Screenshot 3</div></div>
+            </div>
+            <div class="game-info-grid">
+              <div class="info-box">
+                <p class="info-label">About</p>
+                <p>Describe the game here — genre, setting, mood, and any notable features.</p>
+              </div>
+              <div class="info-box">
+                <p class="info-label">My Role</p>
+                <ul>
+                  <li>Dynamic lighting systems</li>
+                  <li>Narrative scripting</li>
+                  <li>Sound design integration</li>
+                  <li>Console optimisation</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GAME 4 -->
+        <div class="game-card reveal">
+          <div class="game-header">
+            <h3 class="game-title">Game Title Four</h3>
+            <span class="game-genre">Strategy</span>
+          </div>
+          <div class="game-body">
+            <p class="media-label">Gameplay</p>
+            <div class="videos-wrap">
+              <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen title="Game 4"></iframe>
+              </div>
+            </div>
+            <p class="media-label">Screenshots</p>
+            <div class="screenshots-grid">
+              <div class="screenshot-thumb" onclick="openLightbox('game4-shot1.jpg')"><div class="screenshot-placeholder">Screenshot 1</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('game4-shot2.jpg')"><div class="screenshot-placeholder">Screenshot 2</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('game4-shot3.jpg')"><div class="screenshot-placeholder">Screenshot 3</div></div>
+            </div>
+            <div class="game-info-grid">
+              <div class="info-box">
+                <p class="info-label">About</p>
+                <p>Describe this game — its setting, objectives, and what makes it memorable.</p>
+              </div>
+              <div class="info-box">
+                <p class="info-label">My Role</p>
+                <ul>
+                  <li>Turn-based combat system</li>
+                  <li>Multiplayer netcode</li>
+                  <li>Procedural map generation</li>
+                  <li>Performance profiling</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT — ★ EDIT: bio and skills -->
+  <section id="about">
+    <div class="container">
+      <div class="section-header">
+        <h2>About Me</h2>
+      </div>
+      <div class="about-grid reveal">
+        <div class="about-text">
+          <p>Hi, I'm <strong>Your Name</strong> — a game developer with a focus on [your specialty].</p>
+          <p>I've been making games since [year], primarily working with [engines/tools]. I'm passionate about [what drives you].</p>
+          <p>Outside of development, I enjoy [hobbies or interests].</p>
+        </div>
+        <div>
+          <p class="media-label" style="margin-bottom: 14px;">Tools &amp; Skills</p>
+          <div class="skills-list">
+            <!-- ★ EDIT: add or remove skill tags -->
+            <span class="skill-tag">Unity</span>
+            <span class="skill-tag">Unreal Engine</span>
+            <span class="skill-tag">Godot</span>
+            <span class="skill-tag">C#</span>
+            <span class="skill-tag">C++</span>
+            <span class="skill-tag">Blender</span>
+            <span class="skill-tag">Level Design</span>
+            <span class="skill-tag">Shader Programming</span>
+            <span class="skill-tag">Game AI</span>
+            <span class="skill-tag">Narrative Design</span>
+            <span class="skill-tag">Git</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT — ★ EDIT: email address -->
+  <section id="contact">
+    <div class="container">
+      <div class="section-header" style="text-align:center;">
+        <h2>Get in Touch</h2>
+        <p>Interested in working together? I'd love to hear from you.</p>
+      </div>
+      <div class="contact-card reveal">
+        <p>Whether you're looking to hire, collaborate on a project, or just want to chat about games — feel free to reach out and I'll get back to you as soon as I can.</p>
+        <!-- ★ EDIT: replace with your real email -->
+        <a class="contact-email-link" href="mailto:your@email.com">your@email.com</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    &copy; <span id="year"></span> Your Name &mdash; Game Developer <!-- ★ EDIT -->
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    function openLightbox(src) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').classList.add('open');
+    }
+    function closeLightbox(e) {
+      if (!e || e.target !== document.getElementById('lightbox-img')) {
+        document.getElementById('lightbox').classList.remove('open');
+      }
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+  </script>
+</body>
+</html>
