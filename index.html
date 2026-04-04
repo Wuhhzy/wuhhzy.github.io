@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
   <style>
     :root {
       --bg:         #1a1028;
@@ -90,6 +91,66 @@
     .info-box ul { padding-left: 16px; }
     .info-box li { margin-bottom: 3px; }
 
+    /* CODE SNIPPETS */
+    .snippet-section { margin-top: 20px; }
+    .snippet-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: var(--body-font);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 7px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: color var(--transition), border-color var(--transition), background var(--transition);
+    }
+    .snippet-toggle:hover { color: var(--accent); border-color: var(--accent); background: rgba(202,170,240,0.06); }
+    .snippet-toggle .toggle-icon {
+      font-size: 0.65rem;
+      transition: transform var(--transition);
+      display: inline-block;
+    }
+    .snippet-toggle.open .toggle-icon { transform: rotate(90deg); }
+    .snippet-wrap {
+      display: none;
+      margin-top: 12px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .snippet-wrap.open { display: block; }
+    .snippet-filename {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: #16102a;
+      padding: 8px 16px;
+      border-bottom: 1px solid var(--border);
+      font-family: 'Courier New', monospace;
+    }
+    .snippet-wrap pre {
+      margin: 0;
+      max-height: 340px;
+      overflow-y: auto;
+      font-size: 0.82rem;
+      line-height: 1.65;
+    }
+    .snippet-wrap pre::-webkit-scrollbar { width: 6px; }
+    .snippet-wrap pre::-webkit-scrollbar-track { background: #16102a; }
+    .snippet-wrap pre::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    .snippet-wrap pre code.hljs {
+      background: #16102a !important;
+      padding: 18px !important;
+      border-radius: 0 !important;
+    }
+
     /* LIGHTBOX */
     .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; }
     .lightbox.open { display: flex; }
@@ -138,16 +199,15 @@
     </div>
   </nav>
 
-  <!-- HERO — ★ EDIT: name, tagline, brand image -->
+  <!-- HERO -->
   <div class="hero">
     <div class="hero-inner">
       <div class="brand-image-wrap">
-        <!-- Replace the div below with: <img src="your-photo.jpg" alt="Your Name" /> -->
         <div class="brand-placeholder">YN</div>
       </div>
       <div class="hero-text">
-        <h1>Your Name</h1>
-        <p>Game Developer specialising in [e.g. gameplay programming, level design]. Based in [City]. Open to opportunities.</p>
+        <h1>Seth Petkau</h1>
+        <p>Game Developer specialising in gameplay programming. Based in Miramichi. Open to opportunities.</p>
         <a href="#games" class="btn">View Portfolio</a>
       </div>
     </div>
@@ -158,10 +218,11 @@
     <div class="container">
       <div class="section-header">
         <h2>Games</h2>
-        <p>A selection of projects I've contributed to.</p>
+        <p>A few projects of mine that I've worked on over the years.</p>
       </div>
       <div class="games-grid">
 
+        <!-- DIGIMON ORIGINS -->
         <div class="game-card reveal">
           <div class="game-header">
             <h3 class="game-title">Digimon Origins</h3>
@@ -185,7 +246,7 @@
             <div class="game-info-grid">
               <div class="info-box">
                 <p class="info-label">About</p>
-                <p>My first major project, built on ROBLOX using Lua and accumulated over 1.8 million visits. An Action RPG where you roam a large map with different areas that was developed over the course of 2+ years, levelling up to unlock new Digimon to transform into. At times we had over 10 members working on the game concurrently, with me as the co-lead developer and eventually lead developer - responsible for coordinating the team, making core design choices and owning the majority of the gameplay scripting. The game generated over 350,000 Robux in revenue - roughly $1,000 USD through Roblox's Developer Exchange program.</p> <!-- ★ -->
+                <p>My first major project, built on ROBLOX using Lua and accumulated over 1.8 million visits. An Action RPG where you roam a large map with different areas that was developed over the course of 2+ years, levelling up to unlock new Digimon to transform into. At times we had over 10 members working on the game concurrently, with me as the co-lead developer and eventually lead developer - responsible for coordinating the team, making core design choices and owning the majority of the gameplay scripting. The game generated over 350,000 Robux in revenue - roughly $1,000 USD through Roblox's Developer Exchange program.</p>
               </div>
               <div class="info-box">
                 <p class="info-label">My Role</p>
@@ -199,9 +260,69 @@
                 </ul>
               </div>
             </div>
+
+            <!-- CODE SNIPPET -->
+            <div class="snippet-section">
+              <button class="snippet-toggle" onclick="toggleSnippet(this)">
+                <span class="toggle-icon">&#9654;</span> View Code Snippet
+              </button>
+              <div class="snippet-wrap">
+                <div class="snippet-filename">EnemyAI.lua</div>
+                <pre><code class="language-lua">-- MusicPlayer: Manages ambiance, music and map chunk loading.
+
+  -- This method handles the transitions between areas by fading audio, updating environment settigns and applying new music tied to each region.
+  local function LoadArea(area)
+	Transitioning = true
+
+	-- Fade out current music
+	TS:Create(Music, TweenInfo.new(2), {Volume = 0}):Play()
+	task.wait(2)
+
+	-- Apply new area settings
+	Music.SoundId = "rbxassetid://" .. area.ID.Value
+	Music.TimePosition = area:FindFirstChild("TimePos") and area.TimePos.Value or 0
+
+	Ambience(area.Name)
+
+	-- Fade in new music
+	TS:Create(Music, TweenInfo.new(2), {Volume = 0.5}):Play()
+	task.wait(2)
+
+	Transitioning = false
+end
+
+-- This method uses recursion to ensure that the correct area loads if the player enters a new area while still loading the previous one.
+-- Fun fact about this code snippet: I made a recursive method without even knowing what recursion was!      
+local function RepeatBack()
+	repeat wait(.05) until not Transitioning
+	if LastTouched ~= CurrentlyPlaying then
+		CurrentlyPlaying = LastTouched
+		LoadArea(Folder[LastTouched])
+		RepeatBack()
+	end
+end
+
+  -- This method is an event trigger that, when one of the large music colliders are touched, begins loading the next area or defers to RepeatBack() if it's already transitioning.
+  child.Touched:Connect(function(hit)
+	if hit.Parent == game.Players.LocalPlayer.Character then
+		LastTouched = child.Name
+
+		if not Transitioning then
+			CurrentlyPlaying = child.Name
+			LoadArea(child)
+		else
+			RepeatBack()
+		end
+	end
+end)
+</code></pre>
+              </div>
+            </div>
+
           </div>
         </div>
 
+        <!-- HORSE ADVENTURE -->
         <div class="game-card reveal">
           <div class="game-header">
             <h3 class="game-title">Horse Adventure</h3>
@@ -236,10 +357,86 @@
                 </ul>
               </div>
             </div>
+
+            <!-- CODE SNIPPET -->
+            <div class="snippet-section">
+              <button class="snippet-toggle" onclick="toggleSnippet(this)">
+                <span class="toggle-icon">&#9654;</span> View Code Snippet
+              </button>
+              <div class="snippet-wrap">
+                <div class="snippet-filename">PlayerController.cs</div>
+                <pre><code class="language-csharp">using UnityEngine;
+
+[RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
+public class PlayerController : MonoBehaviour
+{
+    [Header("Movement")]
+    [SerializeField] private float moveSpeed = 7f;
+    [SerializeField] private float jumpForce = 12f;
+
+    [Header("Ground Check")]
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundLayer;
+
+    private Rigidbody2D rb;
+    private Animator anim;
+    private bool isGrounded;
+    private float horizontal;
+
+    void Awake()
+    {
+        rb = GetComponent&lt;Rigidbody2D&gt;();
+        anim = GetComponent&lt;Animator&gt;();
+    }
+
+    void Update()
+    {
+        horizontal = Input.GetAxisRaw("Horizontal");
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.15f, groundLayer);
+
+        if (Input.GetButtonDown("Jump") &amp;&amp; isGrounded)
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+
+        if (Input.GetButtonDown("Fire1"))
+            Attack();
+
+        // Flip sprite to face movement direction
+        if (horizontal != 0)
+            transform.localScale = new Vector3(Mathf.Sign(horizontal), 1f, 1f);
+
+        anim.SetFloat("Speed", Mathf.Abs(horizontal));
+        anim.SetBool("IsGrounded", isGrounded);
+    }
+
+    void FixedUpdate()
+    {
+        rb.linearVelocity = new Vector2(horizontal * moveSpeed, rb.linearVelocity.y);
+    }
+
+    private void Attack()
+    {
+        anim.SetTrigger("Attack");
+        // Hitbox detection handled via animation event -> OnAttackHit()
+    }
+
+    public void OnAttackHit()
+    {
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 1.2f);
+        foreach (var hit in hits)
+        {
+            if (hit.CompareTag("Enemy"))
+                hit.GetComponent&lt;EnemyHealth&gt;()?.TakeDamage(10);
+        }
+    }
+}
+</code></pre>
+              </div>
+            </div>
+
           </div>
         </div>
 
-        <!-- GAME 3 -->
+        <!-- ZOMBIE SHOOTER -->
         <div class="game-card reveal">
           <div class="game-header">
             <h3 class="game-title">Zombie Shooter Game</h3>
@@ -276,10 +473,87 @@
                 </ul>
               </div>
             </div>
+
+            <!-- CODE SNIPPET -->
+            <div class="snippet-section">
+              <button class="snippet-toggle" onclick="toggleSnippet(this)">
+                <span class="toggle-icon">&#9654;</span> View Code Snippet
+              </button>
+              <div class="snippet-wrap">
+                <div class="snippet-filename">EnemyHealth.cs</div>
+                <pre><code class="language-csharp">using UnityEngine;
+
+public class EnemyHealth : MonoBehaviour
+{
+    [Header("Health")]
+    [SerializeField] private float maxHealth = 100f;
+    private float currentHealth;
+
+    [Header("Dismemberment")]
+    [SerializeField] private GameObject[] limbObjects;
+    [SerializeField] private float dismemberThreshold = 25f;
+    [SerializeField] private GameObject gibPrefab;
+
+    private bool isDead = false;
+    private Animator anim;
+
+    void Awake()
+    {
+        currentHealth = maxHealth;
+        anim = GetComponent&lt;Animator&gt;();
+    }
+
+    public void TakeDamage(float amount, Vector3 hitPoint, bool isHeadshot = false)
+    {
+        if (isDead) return;
+
+        float finalDamage = isHeadshot ? amount * 2.5f : amount;
+        currentHealth -= finalDamage;
+
+        // Dismember a random limb when a large hit comes in
+        if (finalDamage >= dismemberThreshold &amp;&amp; limbObjects.Length > 0)
+            TriggerDismemberment(hitPoint);
+
+        if (currentHealth &lt;= 0f)
+            Die(hitPoint);
+        else
+            anim.SetTrigger("Hit");
+    }
+
+    private void TriggerDismemberment(Vector3 hitPoint)
+    {
+        int idx = Random.Range(0, limbObjects.Length);
+        GameObject limb = limbObjects[idx];
+        if (limb == null) return;
+
+        // Detach limb and apply physics impulse
+        limb.transform.SetParent(null);
+        if (limb.TryGetComponent&lt;Rigidbody&gt;(out var rb))
+        {
+            rb.isKinematic = false;
+            rb.AddExplosionForce(300f, hitPoint, 0.5f);
+        }
+        limbObjects[idx] = null;
+    }
+
+    private void Die(Vector3 hitPoint)
+    {
+        isDead = true;
+        anim.SetTrigger("Die");
+        // Spawn gib effect at hit location
+        if (gibPrefab != null)
+            Instantiate(gibPrefab, hitPoint, Quaternion.identity);
+        Destroy(gameObject, 4f);
+    }
+}
+</code></pre>
+              </div>
+            </div>
+
           </div>
         </div>
 
-        <!-- GAME 4 -->
+        <!-- UNTITLED RPG -->
         <div class="game-card reveal">
           <div class="game-header">
             <h3 class="game-title">Untitled RPG Game</h3>
@@ -316,6 +590,93 @@
                 </ul>
               </div>
             </div>
+
+            <!-- CODE SNIPPET -->
+            <div class="snippet-section">
+              <button class="snippet-toggle" onclick="toggleSnippet(this)">
+                <span class="toggle-icon">&#9654;</span> View Code Snippet
+              </button>
+              <div class="snippet-wrap">
+                <div class="snippet-filename">CombatManager.cs</div>
+                <pre><code class="language-csharp">using Unity.Netcode;
+using UnityEngine;
+using System.Collections;
+
+/// &lt;summary&gt;
+/// Active Time Battle system — each combatant fills an ATB gauge.
+/// When full, they may act. Server-authoritative.
+/// &lt;/summary&gt;
+public class CombatManager : NetworkBehaviour
+{
+    [SerializeField] private float atbFillRate = 20f; // units per second
+
+    // NetworkVariable keeps all clients in sync automatically
+    private NetworkVariable&lt;float&gt; playerATB = new(0f,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server);
+
+    private NetworkVariable&lt;bool&gt; playerReady = new(false,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server);
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsServer)
+            StartCoroutine(TickATB());
+    }
+
+    private IEnumerator TickATB()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(0.05f);
+            if (!playerReady.Value)
+            {
+                playerATB.Value = Mathf.Min(playerATB.Value + atbFillRate * 0.05f, 100f);
+                if (playerATB.Value >= 100f)
+                    playerReady.Value = true;
+            }
+        }
+    }
+
+    // Called by the owning client when they choose an action
+    [ServerRpc(RequireOwnership = false)]
+    public void SubmitActionServerRpc(ActionData action, ServerRpcParams rpcParams = default)
+    {
+        if (!playerReady.Value) return;
+
+        ResolveAction(action);
+
+        // Reset ATB after acting
+        playerATB.Value = 0f;
+        playerReady.Value = false;
+    }
+
+    private void ResolveAction(ActionData action)
+    {
+        // Apply damage, healing, or status effects on the server
+        Debug.Log($"[Server] Resolving action: {action.type} for {action.actorId}");
+    }
+}
+
+[System.Serializable]
+public struct ActionData : INetworkSerializable
+{
+    public ulong actorId;
+    public string type;   // "attack", "heal", "skill", etc.
+    public int targetId;
+
+    public void NetworkSerialize&lt;T&gt;(BufferSerializer&lt;T&gt; s) where T : IReaderWriter
+    {
+        s.SerializeValue(ref actorId);
+        s.SerializeValue(ref type);
+        s.SerializeValue(ref targetId);
+    }
+}
+</code></pre>
+              </div>
+            </div>
+
           </div>
         </div>
 
@@ -375,12 +736,23 @@
     &copy; <span id="year"></span> Seth Petkau &mdash; Game Developer
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <script>
+    // Syntax highlighting
+    hljs.highlightAll();
+
+    // Year
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Scroll reveal
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      });
     }, { threshold: 0.08 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Lightbox
     function openLightbox(src) {
       document.getElementById('lightbox-img').src = src;
       document.getElementById('lightbox').classList.add('open');
@@ -391,6 +763,14 @@
       }
     }
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+    // Code snippet toggle
+    function toggleSnippet(btn) {
+      btn.classList.toggle('open');
+      const wrap = btn.nextElementSibling;
+      wrap.classList.toggle('open');
+      btn.querySelector('.toggle-icon').textContent = wrap.classList.contains('open') ? '▼' : '▶';
+    }
   </script>
 </body>
 </html>
