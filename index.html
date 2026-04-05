@@ -246,7 +246,7 @@
             <div class="game-info-grid">
               <div class="info-box">
                 <p class="info-label">About</p>
-                <p>My first major project, built on ROBLOX using Lua and accumulated over 1.8 million visits. An Action RPG where you roam a large map with different areas that was developed over the course of 2+ years, levelling up to unlock new Digimon to transform into. At times we had over 10 members working on the game concurrently, with me as the co-lead developer and eventually lead developer - responsible for coordinating the team, making core design choices and owning the majority of the gameplay scripting. The game generated over 350,000 Robux in revenue - roughly $1,000 USD through Roblox's Developer Exchange program.</p>
+                <p>My first major project, built on Roblox using Lua, which accumulated over 1.8 million visits. An action RPG where you roam a large map with distinct areas, developed over 2+ years, levelling up to unlock new Digimon to transform into. At its peak, we had over 10 members working on the game concurrently, with me serving as co-lead developer and eventually lead developer — responsible for coordinating the team, making core design decisions, and owning the majority of the gameplay scripting. The game generated over 350,000 Robux in revenue, roughly $1,000 USD through Roblox's Developer Exchange program.</p>
               </div>
               <div class="info-box">
                 <p class="info-label">My Role</p>
@@ -268,9 +268,10 @@
               </button>
               <div class="snippet-wrap">
                 <div class="snippet-filename">MusicPlayer.lua</div>
-                <pre><code class="language-lua">-- MusicPlayer: Manages ambiance, music and map chunk loading.
-
-  -- This method handles the transitions between areas by fading audio, updating environment settigns and applying new music tied to each region.
+                <pre><code class="language-lua">
+  -- MusicPlayer: Manages ambiance, music and map chunk loading.
+  -- This method handles the transitions between areas by fading audio,
+  -- updating environment settigns and applying new music tied to each region.
   local function LoadArea(area)
 	Transitioning = true
 
@@ -345,7 +346,7 @@ end)
             <div class="game-info-grid">
               <div class="info-box">
                 <p class="info-label">About</p>
-                <p>A silly 2D platformer where you roam a level and kill enemies while riding a horse. This was my first college project for Unity, and this was mostly a fun, solo passion project to familiarize myself with Unity that took a few weeks to create. All of the assets and code were human-made, aside from the background pixel art which I used Photoshop AI for.</p>
+                <p>A silly 2D platformer where you roam a level and kill enemies while riding a horse. This was my first college project for Unity — mostly a fun, solo passion project to familiarize myself with the engine, taking a few weeks to create. All assets and code were made by hand, aside from the background pixel art, which was generated using Photoshop AI.</p>
               </div>
               <div class="info-box">
                 <p class="info-label">My Role</p>
@@ -366,8 +367,8 @@ end)
               <div class="snippet-wrap">
                 <div class="snippet-filename">PlayerController.cs</div>
                 <pre><code class="language-csharp">
--- These lines of code are the audio-reactive visual system;
--- they are what drives the camera distortions and zoom depending on how loud the song is.
+// These lines of code are the audio-reactive visual system;
+// they are what drives the camera distortions and zoom depending on how loud the song is.
 phonkMusic.GetSpectrumData(spectrum, 0, FFTWindow.Rectangular);
 
 cineCamera.Lens.OrthographicSize = 3f - bassScaled;
@@ -376,8 +377,8 @@ bloom.threshold.value = 1f - bassScaled;
 lens.intensity.value = 0f + bassScaled;
 chromAbb.intensity.value = bassScaled;
 
--- This is attached to the previous script; they handle the speed of how fast the colors change
--- on the UI, depending on how loud the music currently is.
+// This is attached to the previous script; they handle the speed of how fast the colors change
+// on the UI, depending on how loud the music currently is.
 for (float interpolant = 0f; interpolant < 1f; interpolant += highestBass / 10f)
 {
     exampleColor = Color.Lerp(colors[startColor], colors[endColor], interpolant);
@@ -415,7 +416,7 @@ for (float interpolant = 0f; interpolant < 1f; interpolant += highestBass / 10f)
             <div class="game-info-grid">
               <div class="info-box">
                 <p class="info-label">About</p>
-                <p>A game created for class by me and one of my peers. We developed this over a couple of weeks as a part of a project, and had a lot of fun with it. I mainly designed the enemy health and dismemberment system and re-worked the guns to have recoil, bullet trails, accurate aiming, and head-bopping.</p>
+                <p>A game created for class by me and a peer. We developed it over a couple of weeks as part of a project and had a lot of fun with it. I mainly designed the enemy health and dismemberment system, and reworked the guns to have recoil, bullet trails, accurate aiming, and head-bobbing.</p>
               </div>
               <div class="info-box">
                 <p class="info-label">My Role</p>
@@ -436,8 +437,8 @@ for (float interpolant = 0f; interpolant < 1f; interpolant += highestBass / 10f)
               <div class="snippet-wrap">
                 <div class="snippet-filename">ZombieLimbHP.cs</div>
                 <pre><code class="language-csharp">
--- This code snippet is the limb dismemberment system; every limb has its own health pool,
--- and once depleted, checks to see what type of body part it is.
+// This code snippet is the limb dismemberment system; every limb has its own health pool,
+// and once depleted, checks to see what type of body part it is.
 if (_hp <= 0)
 {
     if (isLeg)
@@ -452,9 +453,9 @@ if (_hp <= 0)
 }
 
 
--- This is a method in an FPS Camera script that controls the recoil when firing your weapon.
--- It randomly determines the amount of recoil, multiplied by the guns recoil, and then
--- smoothly applies recoil and brings the camera back to its original position.
+// This is a method in an FPS Camera script that controls the recoil when firing your weapon.
+// It randomly determines the amount of recoil, multiplied by the guns recoil, and then
+// smoothly applies recoil and brings the camera back to its original position.
 public void Recoil(float recoilX, float recoilY)
 {
     recoilYawOffset += (Random.value - 0.5f) * recoilX;
@@ -497,12 +498,12 @@ float finalPitch = Mathf.Clamp(targetPitch + recoilPitchOffset, MinPitch, MaxPit
             <div class="screenshots-grid">
               <div class="screenshot-thumb" onclick="openLightbox('untitledrpg/image1.png')"><div class="screenshot-placeholder">Picking a Floor</div></div>
               <div class="screenshot-thumb" onclick="openLightbox('untitledrpg/image2.png')"><div class="screenshot-placeholder">Mid-Battle Screenshot</div></div>
-              <div class="screenshot-thumb" onclick="openLightbox('untitledrpg/image3.png)"><div class="screenshot-placeholder">Resting Screen</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('untitledrpg/image3.png')"><div class="screenshot-placeholder">Resting Screen</div></div>
             </div>
             <div class="game-info-grid">
               <div class="info-box">
                 <p class="info-label">About</p>
-                <p>A dungeon crawler, multiplayer RPG with an active time bar combat system, which is currently in active development. This is my first game I've made heavy use of AI for to help with coding the game, as it's my first foray into networking and multiplayer in Unity. I plan on the game being cross-platform and multiplayer, using Unity Relay and Unity Lobby.</p>
+                <p>A multiplayer dungeon-crawler RPG with an active time bar combat system, currently in active development. This is the first game I've made heavy use of AI for, as it's my first foray into networking and multiplayer in Unity. I plan for the game to be cross-platform, using Unity Relay and Unity Lobby.</p>
               </div>
               <div class="info-box">
                 <p class="info-label">My Role</p>
@@ -523,9 +524,9 @@ float finalPitch = Mathf.Clamp(targetPitch + recoilPitchOffset, MinPitch, MaxPit
               <div class="snippet-wrap">
                 <div class="snippet-filename">Character.cs</div>
                 <pre><code class="language-csharp">
--- These values are NetworkVariables, and the client's UI automatically updates through
--- these subscriptions, which eliminates the need for ClientRPCs nor manual sync calls.
--- Additionally, they are unsubscribed in OnNetworkDespawn, which prevents a memory leak.
+// These values are NetworkVariables, and the client's UI automatically updates through
+// these subscriptions, which eliminates the need for ClientRPCs nor manual sync calls.
+// Additionally, they are unsubscribed in OnNetworkDespawn, which prevents a memory leak.
 
 _onMeterChanged  = (_, v) => display.SetMeter(v, Ready.Value);
 _onReadyChanged  = (_, v) => display.SetReady(v);
