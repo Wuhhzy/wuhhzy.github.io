@@ -267,7 +267,7 @@
                 <span class="toggle-icon">&#9654;</span> View Code Snippet
               </button>
               <div class="snippet-wrap">
-                <div class="snippet-filename">EnemyAI.lua</div>
+                <div class="snippet-filename">MusicPlayer.lua</div>
                 <pre><code class="language-lua">-- MusicPlayer: Manages ambiance, music and map chunk loading.
 
   -- This method handles the transitions between areas by fading audio, updating environment settigns and applying new music tied to each region.
@@ -337,15 +337,15 @@ end)
             </div>
             <p class="media-label">Screenshots</p>
             <div class="screenshots-grid">
-              <div class="screenshot-thumb" onclick="openLightbox('game2-shot1.jpg')"><div class="screenshot-placeholder">Screenshot 1</div></div>
-              <div class="screenshot-thumb" onclick="openLightbox('game2-shot2.jpg')"><div class="screenshot-placeholder">Screenshot 2</div></div>
-              <div class="screenshot-thumb" onclick="openLightbox('game2-shot3.jpg')"><div class="screenshot-placeholder">Screenshot 3</div></div>
-              <div class="screenshot-thumb" onclick="openLightbox('game2-shot4.jpg')"><div class="screenshot-placeholder">Screenshot 4</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('horseadventure/image.png')"><div class="screenshot-placeholder">Main Screen</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('horseadventure/image1.png')"><div class="screenshot-placeholder">Attacking a Chicken</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('horseadventure/image2.png')"><div class="screenshot-placeholder">Divebombing a Duck</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('horseadventure/image3.png')"><div class="screenshot-placeholder">Entering the Desert</div></div>
             </div>
             <div class="game-info-grid">
               <div class="info-box">
                 <p class="info-label">About</p>
-                <p>A silly 2D platformer where you roam a level and kill enemies as a horse. This was my first college project for Unity, and this was mostly a fun, solo passion project to familiarize myself with Unity that took a few weeks to create. All of the assets and code were human-made, aside from the background pixel art which I used Photoshop AI for.</p>
+                <p>A silly 2D platformer where you roam a level and kill enemies while riding a horse. This was my first college project for Unity, and this was mostly a fun, solo passion project to familiarize myself with Unity that took a few weeks to create. All of the assets and code were human-made, aside from the background pixel art which I used Photoshop AI for.</p>
               </div>
               <div class="info-box">
                 <p class="info-label">My Role</p>
@@ -365,69 +365,23 @@ end)
               </button>
               <div class="snippet-wrap">
                 <div class="snippet-filename">PlayerController.cs</div>
-                <pre><code class="language-csharp">using UnityEngine;
+                <pre><code class="language-csharp">
+-- These lines of code are the audio-reactive visual system;
+-- they are what drives the camera distortions and zoom depending on how loud the song is.
+phonkMusic.GetSpectrumData(spectrum, 0, FFTWindow.Rectangular);
 
-[RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
-public class PlayerController : MonoBehaviour
+cineCamera.Lens.OrthographicSize = 3f - bassScaled;
+bloom.intensity.value = 1f + (bassScaled * 10);
+bloom.threshold.value = 1f - bassScaled;
+lens.intensity.value = 0f + bassScaled;
+chromAbb.intensity.value = bassScaled;
+
+-- This is attached to the previous script; they handle the speed of how fast the colors change
+-- on the UI, depending on how loud the music currently is.
+for (float interpolant = 0f; interpolant < 1f; interpolant += highestBass / 10f)
 {
-    [Header("Movement")]
-    [SerializeField] private float moveSpeed = 7f;
-    [SerializeField] private float jumpForce = 12f;
-
-    [Header("Ground Check")]
-    [SerializeField] private Transform groundCheck;
-    [SerializeField] private LayerMask groundLayer;
-
-    private Rigidbody2D rb;
-    private Animator anim;
-    private bool isGrounded;
-    private float horizontal;
-
-    void Awake()
-    {
-        rb = GetComponent&lt;Rigidbody2D&gt;();
-        anim = GetComponent&lt;Animator&gt;();
-    }
-
-    void Update()
-    {
-        horizontal = Input.GetAxisRaw("Horizontal");
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.15f, groundLayer);
-
-        if (Input.GetButtonDown("Jump") &amp;&amp; isGrounded)
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-
-        if (Input.GetButtonDown("Fire1"))
-            Attack();
-
-        // Flip sprite to face movement direction
-        if (horizontal != 0)
-            transform.localScale = new Vector3(Mathf.Sign(horizontal), 1f, 1f);
-
-        anim.SetFloat("Speed", Mathf.Abs(horizontal));
-        anim.SetBool("IsGrounded", isGrounded);
-    }
-
-    void FixedUpdate()
-    {
-        rb.linearVelocity = new Vector2(horizontal * moveSpeed, rb.linearVelocity.y);
-    }
-
-    private void Attack()
-    {
-        anim.SetTrigger("Attack");
-        // Hitbox detection handled via animation event -> OnAttackHit()
-    }
-
-    public void OnAttackHit()
-    {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 1.2f);
-        foreach (var hit in hits)
-        {
-            if (hit.CompareTag("Enemy"))
-                hit.GetComponent&lt;EnemyHealth&gt;()?.TakeDamage(10);
-        }
-    }
+    exampleColor = Color.Lerp(colors[startColor], colors[endColor], interpolant);
+    yield return null;
 }
 </code></pre>
               </div>
@@ -454,9 +408,9 @@ public class PlayerController : MonoBehaviour
             </div>
             <p class="media-label">Screenshots</p>
             <div class="screenshots-grid">
-              <div class="screenshot-thumb" onclick="openLightbox('game3-shot1.jpg')"><div class="screenshot-placeholder">Screenshot 1</div></div>
-              <div class="screenshot-thumb" onclick="openLightbox('game3-shot2.jpg')"><div class="screenshot-placeholder">Screenshot 2</div></div>
-              <div class="screenshot-thumb" onclick="openLightbox('game3-shot3.jpg')"><div class="screenshot-placeholder">Screenshot 3</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('zombieshooter/image1.png')"><div class="screenshot-placeholder">Entering the Game</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('zombieshooter/image2.png')"><div class="screenshot-placeholder">Crawling Zombie</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('zombieshooter/image3.png')"><div class="screenshot-placeholder">Dead Zombie</div></div>
             </div>
             <div class="game-info-grid">
               <div class="info-box">
@@ -480,72 +434,42 @@ public class PlayerController : MonoBehaviour
                 <span class="toggle-icon">&#9654;</span> View Code Snippet
               </button>
               <div class="snippet-wrap">
-                <div class="snippet-filename">EnemyHealth.cs</div>
-                <pre><code class="language-csharp">using UnityEngine;
-
-public class EnemyHealth : MonoBehaviour
+                <div class="snippet-filename">ZombieLimbHP.cs</div>
+                <pre><code class="language-csharp">
+-- This code snippet is the limb dismemberment system; every limb has its own health pool,
+-- and once depleted, checks to see what type of body part it is.
+if (_hp <= 0)
 {
-    [Header("Health")]
-    [SerializeField] private float maxHealth = 100f;
-    private float currentHealth;
-
-    [Header("Dismemberment")]
-    [SerializeField] private GameObject[] limbObjects;
-    [SerializeField] private float dismemberThreshold = 25f;
-    [SerializeField] private GameObject gibPrefab;
-
-    private bool isDead = false;
-    private Animator anim;
-
-    void Awake()
+    if (isLeg)
     {
-        currentHealth = maxHealth;
-        anim = GetComponent&lt;Animator&gt;();
+        transform.root.GetComponent<ZombieBasic>().SetCrawling(true);
     }
-
-    public void TakeDamage(float amount, Vector3 hitPoint, bool isHeadshot = false)
+    foreach (var mesh in destroyableMesh) mesh.SetActive(false);
+    if (isVitalPart)
     {
-        if (isDead) return;
-
-        float finalDamage = isHeadshot ? amount * 2.5f : amount;
-        currentHealth -= finalDamage;
-
-        // Dismember a random limb when a large hit comes in
-        if (finalDamage >= dismemberThreshold &amp;&amp; limbObjects.Length > 0)
-            TriggerDismemberment(hitPoint);
-
-        if (currentHealth &lt;= 0f)
-            Die(hitPoint);
-        else
-            anim.SetTrigger("Hit");
-    }
-
-    private void TriggerDismemberment(Vector3 hitPoint)
-    {
-        int idx = Random.Range(0, limbObjects.Length);
-        GameObject limb = limbObjects[idx];
-        if (limb == null) return;
-
-        // Detach limb and apply physics impulse
-        limb.transform.SetParent(null);
-        if (limb.TryGetComponent&lt;Rigidbody&gt;(out var rb))
-        {
-            rb.isKinematic = false;
-            rb.AddExplosionForce(300f, hitPoint, 0.5f);
-        }
-        limbObjects[idx] = null;
-    }
-
-    private void Die(Vector3 hitPoint)
-    {
-        isDead = true;
-        anim.SetTrigger("Die");
-        // Spawn gib effect at hit location
-        if (gibPrefab != null)
-            Instantiate(gibPrefab, hitPoint, Quaternion.identity);
-        Destroy(gameObject, 4f);
+        transform.root.GetComponent<ZombieBasic>().hp = 0;
     }
 }
+
+
+-- This is a method in an FPS Camera script that controls the recoil when firing your weapon.
+-- It randomly determines the amount of recoil, multiplied by the guns recoil, and then
+-- smoothly applies recoil and brings the camera back to its original position.
+public void Recoil(float recoilX, float recoilY)
+{
+    recoilYawOffset += (Random.value - 0.5f) * recoilX;
+    recoilPitchOffset -= Mathf.Abs(Random.value - 0.5f) * recoilY;
+}
+
+// In Update:
+float retainedYaw = recoilYawOffset * recoilRetention;
+float retainedPitch = recoilPitchOffset * recoilRetention;
+
+recoilYawOffset = Mathf.SmoothDamp(recoilYawOffset, retainedYaw, ref recoilYawVelocity, recoilRecoveryTime);
+recoilPitchOffset = Mathf.SmoothDamp(recoilPitchOffset, retainedPitch, ref recoilPitchVelocity, recoilRecoveryTime);
+
+float finalYaw = targetYaw + recoilYawOffset;
+float finalPitch = Mathf.Clamp(targetPitch + recoilPitchOffset, MinPitch, MaxPitch);
 </code></pre>
               </div>
             </div>
@@ -571,9 +495,9 @@ public class EnemyHealth : MonoBehaviour
             </div>
             <p class="media-label">Screenshots</p>
             <div class="screenshots-grid">
-              <div class="screenshot-thumb" onclick="openLightbox('game4-shot1.jpg')"><div class="screenshot-placeholder">Screenshot 1</div></div>
-              <div class="screenshot-thumb" onclick="openLightbox('game4-shot2.jpg')"><div class="screenshot-placeholder">Screenshot 2</div></div>
-              <div class="screenshot-thumb" onclick="openLightbox('game4-shot3.jpg')"><div class="screenshot-placeholder">Screenshot 3</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('untitledrpg/image1.png')"><div class="screenshot-placeholder">Picking a Floor</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('untitledrpg/image2.png')"><div class="screenshot-placeholder">Mid-Battle Screenshot</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('untitledrpg/image3.png)"><div class="screenshot-placeholder">Resting Screen</div></div>
             </div>
             <div class="game-info-grid">
               <div class="info-box">
@@ -597,82 +521,23 @@ public class EnemyHealth : MonoBehaviour
                 <span class="toggle-icon">&#9654;</span> View Code Snippet
               </button>
               <div class="snippet-wrap">
-                <div class="snippet-filename">CombatManager.cs</div>
-                <pre><code class="language-csharp">using Unity.Netcode;
-using UnityEngine;
-using System.Collections;
+                <div class="snippet-filename">Character.cs</div>
+                <pre><code class="language-csharp">
+-- These values are NetworkVariables, and the client's UI automatically updates through
+-- these subscriptions, which eliminates the need for ClientRPCs nor manual sync calls.
+-- Additionally, they are unsubscribed in OnNetworkDespawn, which prevents a memory leak.
 
-/// &lt;summary&gt;
-/// Active Time Battle system — each combatant fills an ATB gauge.
-/// When full, they may act. Server-authoritative.
-/// &lt;/summary&gt;
-public class CombatManager : NetworkBehaviour
-{
-    [SerializeField] private float atbFillRate = 20f; // units per second
+_onMeterChanged  = (_, v) => display.SetMeter(v, Ready.Value);
+_onReadyChanged  = (_, v) => display.SetReady(v);
+_onHPChanged     = (_, v) => display.SetHP(v, MaxHP.Value);
+_onMPChanged     = (_, v) => display.SetMP(v, MaxMP.Value);
+_onShieldChanged = (_, v) => display.SetShield(v);
 
-    // NetworkVariable keeps all clients in sync automatically
-    private NetworkVariable&lt;float&gt; playerATB = new(0f,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server);
-
-    private NetworkVariable&lt;bool&gt; playerReady = new(false,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server);
-
-    public override void OnNetworkSpawn()
-    {
-        if (IsServer)
-            StartCoroutine(TickATB());
-    }
-
-    private IEnumerator TickATB()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(0.05f);
-            if (!playerReady.Value)
-            {
-                playerATB.Value = Mathf.Min(playerATB.Value + atbFillRate * 0.05f, 100f);
-                if (playerATB.Value >= 100f)
-                    playerReady.Value = true;
-            }
-        }
-    }
-
-    // Called by the owning client when they choose an action
-    [ServerRpc(RequireOwnership = false)]
-    public void SubmitActionServerRpc(ActionData action, ServerRpcParams rpcParams = default)
-    {
-        if (!playerReady.Value) return;
-
-        ResolveAction(action);
-
-        // Reset ATB after acting
-        playerATB.Value = 0f;
-        playerReady.Value = false;
-    }
-
-    private void ResolveAction(ActionData action)
-    {
-        // Apply damage, healing, or status effects on the server
-        Debug.Log($"[Server] Resolving action: {action.type} for {action.actorId}");
-    }
-}
-
-[System.Serializable]
-public struct ActionData : INetworkSerializable
-{
-    public ulong actorId;
-    public string type;   // "attack", "heal", "skill", etc.
-    public int targetId;
-
-    public void NetworkSerialize&lt;T&gt;(BufferSerializer&lt;T&gt; s) where T : IReaderWriter
-    {
-        s.SerializeValue(ref actorId);
-        s.SerializeValue(ref type);
-        s.SerializeValue(ref targetId);
-    }
-}
+Meter.OnValueChanged        += _onMeterChanged;
+Ready.OnValueChanged        += _onReadyChanged;
+HP.OnValueChanged           += _onHPChanged;
+MP.OnValueChanged           += _onMPChanged;
+ShieldAmount.OnValueChanged += _onShieldChanged;
 </code></pre>
               </div>
             </div>
