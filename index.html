@@ -172,14 +172,20 @@
     .info-box li { margin-bottom: 3px; }
  
     /* CODE SNIPPETS */
-    .snippet-section { margin-top: 20px; }
-    .snippet-toggle {
-      display: inline-flex; align-items: center; gap: 7px; background: none;
-      border: 1px solid var(--border); color: var(--muted); font-family: var(--body-font);
-      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; padding: 7px 14px;
-      border-radius: 4px; cursor: pointer;
-      transition: color var(--transition), border-color var(--transition), background var(--transition);
-    }
+    .snippet-section {
+	  margin-top: 20px;
+	  display: flex;
+	  flex-direction: column;
+	}
+	.snippet-toggles {
+	  display: flex;
+	  flex-wrap: wrap;
+	  gap: 8px;
+	  margin-bottom: 0;
+	}
+	.snippet-toggles .snippet-toggle {
+	  margin: 0;
+	}
     .snippet-toggle:hover { color: var(--accent); border-color: var(--accent); background: rgba(202,170,240,0.06); }
     .snippet-toggle .toggle-icon { font-size: 0.65rem; transition: transform var(--transition); display: inline-block; }
     .snippet-toggle.open .toggle-icon { transform: rotate(90deg); }
@@ -266,24 +272,8 @@
 			</video>
 		  </div>
 		</div>
-          <!-- Slide 1: Horse Adventure (YouTube) -->
-          <div class="reel-slide" data-type="youtube" data-src="https://www.youtube.com/embed/eV0AOUS_fwA">
-            <!-- loaded lazily on tab click -->
-          </div>
-          <!-- Slide 2: Zombie Shooter (local video) -->
-          <div class="reel-slide" data-type="video" data-src="zombieshooter/ZombieSurvivalGameplayCompressed.mp4">
-            <!-- loaded lazily on tab click -->
-          </div>
-          <!-- Slide 3: Untitled RPG (local video) -->
-          <div class="reel-slide" data-type="video" data-src="untitledrpg/UntitledRPGGameplay.mp4">
-            <!-- loaded lazily on tab click -->
-          </div>
         </div>
-        <p class="reel-caption" id="reelCaption">Action RPG &mdash; 1.8M+ visits on Roblox</p>
       </div>
- 
-    </div>
-  </div>
  
   <!-- GAMES -->
   <section id="games">
@@ -332,17 +322,28 @@
                 </ul>
               </div>
             </div>
-            <div class="snippet-section">
-              <button class="snippet-toggle" onclick="toggleSnippet(this)">
-                <span class="toggle-icon">&#9654;</span> View Code Snippet
-              </button>
-              <div class="snippet-wrap">
-                <div class="snippet-filename">MusicPlayer.lua</div>
-                <pre><code class="language-lua">
-  -- MusicPlayer: Manages ambiance, music and map chunk loading.
-  -- This method handles the transitions between areas by fading audio,
-  -- updating environment settigns and applying new music tied to each region.
-  local function LoadArea(area)
+
+			<div class="snippet-section">
+			  <div class="snippet-toggles">
+			    <button class="snippet-toggle" onclick="toggleSnippet(this)">
+			      <span class="toggle-icon">&#9654;</span> MusicPlayer.lua
+			    </button>
+			    <button class="snippet-toggle" onclick="toggleSnippet(this)">
+			      <span class="toggle-icon">&#9654;</span> DiscordAPI.lua
+			    </button>
+				<button class="snippet-toggle" onclick="toggleSnippet(this)">
+			      <span class="toggle-icon">&#9654;</span> FollowAI.lua
+			    </button>
+				<button class="snippet-toggle" onclick="toggleSnippet(this)">
+			      <span class="toggle-icon">&#9654;</span> EnemyDropModule.lua
+			    </button>
+			  </div>
+			  <div class="snippet-wrap">
+			    <div class="snippet-filename">MusicPlayer.lua</div>
+			    <pre><code class="language-lua">-- MusicPlayer: Manages ambiance, music and map chunk loading.
+-- This method handles the transitions between areas by fading audio,
+-- updating environment settigns and applying new music tied to each region.
+local function LoadArea(area)
 	Transitioning = true
  
 	-- Fade out current music
@@ -373,8 +374,8 @@ local function RepeatBack()
 	end
 end
  
-  -- This method is an event trigger that, when one of the large music colliders are touched, begins loading the next area or defers to RepeatBack() if it's already transitioning.
-  child.Touched:Connect(function(hit)
+-- This method is an event trigger that, when one of the large music colliders are touched, begins loading the next area or defers to RepeatBack() if it's already transitioning.
+child.Touched:Connect(function(hit)
 	if hit.Parent == game.Players.LocalPlayer.Character then
 		LastTouched = child.Name
  
@@ -385,21 +386,179 @@ end
 			RepeatBack()
 		end
 	end
+end)</code></pre>
+				  
+			  </div>
+			  <div class="snippet-wrap">
+			    <div class="snippet-filename">DiscordAPI.lua</div>
+			    <pre><code class="language-lua">-- This script fires when a player triggers the event to save their data.
+-- It creates a table that contains the player's name and all of their saved stats, encodes it to JSON and then sends it to our discord server.
+-- This was created in order to track player save data, so that in the event of their save data being corrupted or rolled back,
+-- we would have a "receipt" of their saves and be able to return it to our last saved state.
+hs = game:GetService("HttpService")
+url = "https://discordapp.com/api/webhooks/576857150358290459/b9tDH5zV3MsffQgLmpx2m7lU0J337GD4dn3cOxPI4GhsNzBE4K8SnZY2hmcnIcUSpJGX"
+game.ReplicatedStorage.ExtraEvents.StatsAPI.OnServerEvent:connect(function(Plr)
+    local myTable = {}
+    myTable["content"] = "Plr Name: "..Plr.Name.."\nUserID: "..Plr.UserId.."\nLevel: "..Plr.Status.Level.Value.."\nCash: "..Plr.Status.Cash.Value.."\nOmega Data: "..Plr.Status.OmegaData.Value.."\nX-Antibody: "..Plr.Status.XAntibody.Value.."\nArkadimon: "..Plr.Status.Arkadi.Value.."\nDracomon: "..Plr.Status.Examon.Value.."\nLucemon: "..Plr.Status.Lucemon.Value.."\nGehenna: "..Plr.Status.Gehenna.Value.."\nSusanoomon: "..Plr.Status.Susanoomon.Value.."\nKimeramon: "..Plr.Status.Kimeramon.Value.."\nBlitzGreymon: "..Plr.Status.Blitz.Value.."\nCresGarurumon: "..Plr.Status.Cres.Value.."\nGumdramon: "..Plr.Status.Gumdra.Value.."\nBelphemon: "..Plr.Status.Belphemon.Value.."\nBlack Agumon: "..Plr.Status.BlackAgumon.Value.."\nJesmon: "..Plr.Status.Jes.Value.."\nKeramon: "..Plr.Status.Kera.Value.."\nNumemon: "..Plr.Status.Nume.Value.."\nOuryuken: "..Plr.Status.Ouryuken.Value.."\nZeed Cannon: "..Plr.Status.ZeedCannon.Value.."\nDramon Breaker: "..Plr.Status.DramonBreaker.Value.."\nShoutmon: "..Plr.Status.Shout.Value
+    myTable["username"] = Plr.Name
+    local myTableJSON = hs:JSONEncode(myTable)
+    hs = game:GetService("HttpService")
+    myTableJSON = hs:JSONEncode(myTable)
+    hs:PostAsync(url, myTableJSON)
 end)
+				</code></pre>
+			  </div>
+
+				<div class="snippet-wrap">
+			    <div class="snippet-filename">FollowAI.lua</div>
+			    <pre><code class="language-lua">-- This is my simple AI script. Every second, it runs findNearestTorso,
+-- which gets every player in the game and sees if they are within a certain distance and has done the most damage to it.
+-- It then returns the target, and if it did not return null, begins moving towards them.
+-- Looking back, I do notice an issue where if the highest damaging player is out of distance, it won't target other
+-- characters, but I am aware of that and would know better now moving forwards.
+local isFollow = script.Parent.isFollowing
+local botroot = script.Parent.HumanoidRootPart
+
+local dist = 650
+
+function findNearestTorso()
+    local torso = nil
+    local damagevalue = 0
+    for _, value in pairs(script.Parent.Names:GetChildren()) do
+        local plr = game.Players:FindFirstChild(value.Name)
+        if plr ~= nil then
+            local char = plr.Character
+            local hum = char:FindFirstChild("Humanoid")
+			local root = char:FindFirstChild("HumanoidRootPart")
+            if char ~= nil and hum and root then
+                if (botroot.Position-root.Position).Magnitude <= dist and value.Value > damagevalue then
+                    damagevalue = value.Value
+					torso = root
+                end
+            end
+        end
+    end
+    return torso
+end
+
+while true do
+    wait(1)
+    local target = findNearestTorso(script.Parent.HumanoidRootPart.Position)
+    if target ~= nil then
+        isFollow.Value = true
+        script.Parent.Humanoid:MoveTo(target.Position, target)
+    else
+        isFollow.Value = false
+    end
+end
+				</code></pre>
+			  </div>
+				
+			</div>
+
+			  
+            <div class="snippet-section">
+              <button class="snippet-toggle" onclick="toggleSnippet(this)">
+                <span class="toggle-icon">&#9654;</span> View Code Snippet
+              </button>
+              <div class="snippet-wrap">
+                <div class="snippet-filename">EnemyDropModule.lua</div>
+                <pre><code class="language-lua">-- This is the main module script for managing enemy drops, as well as a giant
+-- loot table for every enemy in the game. I've trimmed the drop tables majorly for the sake of this being a code snippet.
+local GlobalMultiplier = 0 -- 0 = 1x EXP, 1 = 2x EXP, etc
+
+-- This is a method used by the DropStats method to notify the player of obtaining a drop.
+local Sys = require(script.Parent.Stats.StatSys)
+Notify = function(player,item)
+	local notice = game.ServerStorage.ExtraStorage.Notice:Clone()
+	notice.Parent = player.PlayerGui:WaitForChild("MainInterface")
+	notice.LocalScript.Disabled = false
+	notice.Text1.Text = "You got "..item.."!"
+	delay(5, function()
+		if notice ~= nil then
+		notice:Destroy()
+		end
+	end)
+	end
+
+local module = {
+	-- This is the module that, when an enemy dies, it rewards all players who fought it.
+	DropStats = function(mob,stats)
+		for _, child in pairs(mob.Names:GetChildren()) do
+		local dmg = child.Value
+		local mhp = mob.Humanoid.MaxHealth
+		local mult = dmg/mhp -- the mult represents the % of damage an individual player dealt to the enemy
+		local capmult = 1 -- capmult is a variable that, if the player is overleveled, divides the rewards by half.
+		if mult > 1 then mult = 1 end
+		local Plr = game.Players:FindFirstChild(child.Name)
+		if Plr ~= nil and Plr.Status.Level.Value >= stats.LevelReq then
+			if Plr.Status.Level.Value >= stats.LevelCap then
+				capmult = 2
+			end
+
+			-- We have special passes that players can buy to multiply the amount of EXP and Cash obtained,
+			-- the loot variable is used to represent that.
+			local loot = 1
+			if Plr.Status.TripleLoot.Value == 1 then
+					loot = 3
+			elseif Plr.Status.DoubleLoot.Value == 1 then
+					loot = 2
+			end
+			Sys.NpcKill(Plr, "EXP", "Cash", math.ceil(((stats.EXP*mult) * (loot+GlobalMultiplier)/capmult)), math.ceil(((stats.Cash*mult) * (loot+GlobalMultiplier)/capmult)))
+			if stats.DropXAntibody then Sys.DropXA(Plr, "XAntibody", math.ceil((stats.XAnti) * mult)) end
+			if stats.DropOmegaData then Sys.DropOD(Plr, "OmegaData", math.ceil((stats.OD) * mult)) end
+			if stats.DropCoin and capmult == 1 and mult >= .25 and stats.CorruptedCoins < 10 then Sys.DropCC(Plr, "CorruptionCoins", stats.CorruptedCoins) end
+			if stats.DropCoin and capmult == 1 and mult >= .08 and stats.CorruptedCoins >= 10 then Sys.DropCC(Plr, "CorruptionCoins", stats.CorruptedCoins) end
+			if stats.DropItem then
+				local reqamnt = 175
+				if stats.Drop == "Mephistomon" or stats.Drop == "TitamonBlade" or stats.Drop == "Murmukusmon" or stats.Drop == "BluefireMegi" then reqamnt = 150 end
+				if math.random(mult*100,200) >= reqamnt then
+					if Plr.Status[stats.Drop].Value < 1 then
+						Sys.DropItem(Plr, stats.Drop)
+						Notify(Plr, stats.Drop)
+					end
+				 end
+			  end
+			end
+			end
+		end;
+	Stats = {
+		StarterArea = {
+			DropXAntibody = false, DropOmegaData = false,
+			EXP = 30, Cash = 15, XAnti = 0, OD = 0,
+			LevelReq = 1, LevelCap = 35
+		};
+		Ice = {
+			DropXAntibody = true, DropOmegaData = false,
+			EXP = 550, Cash = 275, XAnti = 2, OD = 0,
+			LevelReq = 110, LevelCap = 225
+		};
+		Bosses = {
+			SkullGreymon = {
+				DropXAntibody = false, DropOmegaData = false,
+				EXP = 2500, Cash = 2500, XAnti = 0, OD = 0,
+				LevelReq = 50, LevelCap = 90,
+			};
+			Megidramon = {
+				DropXAntibody = false, DropOmegaData = false,
+				EXP = 80000, Cash = 25000, XAnti = 0, OD = 0,
+				LevelReq = 300, LevelCap = 600, DropItem = true, Drop = "Megidramon"
+			};
+			};
+		CorruptedBots = {
+			Chrysalimon = {
+				DropXAntibody = false, DropOmegaData = false, DropCoin = true,
+				EXP = 2500, Cash = 2500, XAnti = 0, OD = 0, CorruptedCoins = 1,
+				LevelReq = 40, LevelCap = 80,
+				};
+						}
+		}
+	}
+
+return module
 </code></pre>
               </div>
             </div>
-			  <div class="snippet-section">
-				  <button class="snippet-toggle" onclick="toggleSnippet(this)">
-				    <span class="toggle-icon">&#9654;</span> View Code Snippet
-				  </button>
-				  <div class="snippet-wrap">
-				    <div class="snippet-filename">YourFile.cs</div>
-				    <pre><code class="language-csharp">
-				// Your code here
-				    </code></pre>
-				  </div>
-				</div>
           </div>
         </div>
  
@@ -700,11 +859,24 @@ ShieldAmount.OnValueChanged += _onShieldChanged;
  
     // Code snippet toggle
     function toggleSnippet(btn) {
-      btn.classList.toggle('open');
-      const wrap = btn.nextElementSibling;
-      wrap.classList.toggle('open');
-      btn.querySelector('.toggle-icon').textContent = wrap.classList.contains('open') ? '▼' : '▶';
-    }
+  const section = btn.closest('.snippet-section');
+  const allBtns = section.querySelectorAll('.snippet-toggle');
+  const allWraps = section.querySelectorAll('.snippet-wrap');
+  const idx = [...allBtns].indexOf(btn);
+  const targetWrap = allWraps[idx];
+  const isOpen = targetWrap.classList.contains('open');
+
+  // Close all in this section
+  allBtns.forEach(b => { b.classList.remove('open'); b.querySelector('.toggle-icon').textContent = '▶'; });
+  allWraps.forEach(w => w.classList.remove('open'));
+
+  // Open clicked one unless it was already open
+  if (!isOpen) {
+    btn.classList.add('open');
+    btn.querySelector('.toggle-icon').textContent = '▼';
+    targetWrap.classList.add('open');
+  }
+}
  
     // Highlight reel
     const reelCaptions = [
