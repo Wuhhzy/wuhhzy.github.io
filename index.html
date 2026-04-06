@@ -309,11 +309,11 @@
             </div>
             <p class="media-label">Screenshots</p>
             <div class="screenshots-grid">
-              <div class="screenshot-thumb" onclick="openLightbox('origins/image5.png')"><div class="screenshot-placeholder">Loading Screen</div></div>
-              <div class="screenshot-thumb" onclick="openLightbox('origins/image4.png')"><div class="screenshot-placeholder">Picking Digimon</div></div>
-              <div class="screenshot-thumb" onclick="openLightbox('origins/image1.png')"><div class="screenshot-placeholder">First Map</div></div>
-              <div class="screenshot-thumb" onclick="openLightbox('origins/image2.png')"><div class="screenshot-placeholder">Second Map</div></div>
-              <div class="screenshot-thumb" onclick="openLightbox('origins/image3.png')"><div class="screenshot-placeholder">Third Map</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('origins/image5.png')"><img src="origins/image5.png" alt="Loading Screen" /></div>
+              <div class="screenshot-thumb" onclick="openLightbox('origins/image4.png')"><img src="origins/image4.png" alt="Picking a Digimon" /></div>
+              <div class="screenshot-thumb" onclick="openLightbox('origins/image1.png')"><img src="origins/image1.png" alt="First Map" /></div>
+              <div class="screenshot-thumb" onclick="openLightbox('origins/image2.png')"><img src="origins/image2.png" alt="Second Map" /></div>
+              <div class="screenshot-thumb" onclick="openLightbox('origins/image3.png')"><img src="origins/image3.png" alt="Third Map" /></div>
             </div>
             <div class="game-info-grid">
               <div class="info-box">
@@ -389,6 +389,17 @@ end)
 </code></pre>
               </div>
             </div>
+			  <div class="snippet-section">
+				  <button class="snippet-toggle" onclick="toggleSnippet(this)">
+				    <span class="toggle-icon">&#9654;</span> View Code Snippet
+				  </button>
+				  <div class="snippet-wrap">
+				    <div class="snippet-filename">YourFile.cs</div>
+				    <pre><code class="language-csharp">
+				// Your code here
+				    </code></pre>
+				  </div>
+				</div>
           </div>
         </div>
  
@@ -407,10 +418,10 @@ end)
             </div>
             <p class="media-label">Screenshots</p>
             <div class="screenshots-grid">
-              <div class="screenshot-thumb" onclick="openLightbox('horseadventure/image.png')"><div class="screenshot-placeholder">Main Screen</div></div>
-              <div class="screenshot-thumb" onclick="openLightbox('horseadventure/image1.png')"><div class="screenshot-placeholder">Attacking a Chicken</div></div>
-              <div class="screenshot-thumb" onclick="openLightbox('horseadventure/image2.png')"><div class="screenshot-placeholder">Divebombing a Duck</div></div>
-              <div class="screenshot-thumb" onclick="openLightbox('horseadventure/image3.png')"><div class="screenshot-placeholder">Entering the Desert</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('horseadventure/image.png')"><img src="horseadventure/image.png" alt="Main Screen" /></div>
+              <div class="screenshot-thumb" onclick="openLightbox('horseadventure/image1.png')"><img src="horseadventure/image1.png" alt="Attacking a Chicken" /></div>
+              <div class="screenshot-thumb" onclick="openLightbox('horseadventure/image2.png')"><img src="horseadventure/image2.png" alt="Divebombing a Duck" /></div>
+              <div class="screenshot-thumb" onclick="openLightbox('horseadventure/image3.png')"><img src="horseadventure/image3.png" alt="Entering the Desert" /></div>
             </div>
             <div class="game-info-grid">
               <div class="info-box">
@@ -475,9 +486,9 @@ for (float interpolant = 0f; interpolant < 1f; interpolant += highestBass / 10f)
             </div>
             <p class="media-label">Screenshots</p>
             <div class="screenshots-grid">
-              <div class="screenshot-thumb" onclick="openLightbox('zombieshooter/image1.png')"><div class="screenshot-placeholder">Entering the Game</div></div>
-              <div class="screenshot-thumb" onclick="openLightbox('zombieshooter/image2.png')"><div class="screenshot-placeholder">Crawling Zombie</div></div>
-              <div class="screenshot-thumb" onclick="openLightbox('zombieshooter/image3.png')"><div class="screenshot-placeholder">Dead Zombie</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('zombieshooter/image1.png')"><img src="zombieshooter/image1.png" alt="Entering the Game" /></div>
+              <div class="screenshot-thumb" onclick="openLightbox('zombieshooter/image2.png')"><img src="zombieshooter/image2.png" alt="Crawling Zombie" /></div>
+              <div class="screenshot-thumb" onclick="openLightbox('zombieshooter/image3.png')"><img src="zombieshooter/image3.png" alt="Dead Zombie" /></div>
             </div>
             <div class="game-info-grid">
               <div class="info-box">
@@ -559,9 +570,9 @@ float finalPitch = Mathf.Clamp(targetPitch + recoilPitchOffset, MinPitch, MaxPit
             </div>
             <p class="media-label">Screenshots</p>
             <div class="screenshots-grid">
-              <div class="screenshot-thumb" onclick="openLightbox('untitledrpg/image1.png')"><div class="screenshot-placeholder">Picking a Floor</div></div>
-              <div class="screenshot-thumb" onclick="openLightbox('untitledrpg/image2.png')"><div class="screenshot-placeholder">Mid-Battle Screenshot</div></div>
-              <div class="screenshot-thumb" onclick="openLightbox('untitledrpg/image3.png')"><div class="screenshot-placeholder">Resting Screen</div></div>
+              <div class="screenshot-thumb" onclick="openLightbox('untitledrpg/image1.png')"><img src="untitledrpg/image1.png" alt="Picking a Floor" /></div>
+              <div class="screenshot-thumb" onclick="openLightbox('untitledrpg/image2.png')"><img src="untitledrpg/image2.png" alt="Mid-Battle Screenshot" /></div>
+              <div class="screenshot-thumb" onclick="openLightbox('untitledrpg/image3.png')"><img src="untitledrpg/image3.png" alt="Resting Screen" /></div>
             </div>
             <div class="game-info-grid">
               <div class="info-box">
@@ -618,7 +629,7 @@ ShieldAmount.OnValueChanged += _onShieldChanged;
       <div class="about-grid reveal">
         <div class="about-text">
           <p>Hi, I'm <strong>Seth Petkau</strong> — a game developer from a young age who loves to code.</p>
-          <p>I've been making games since 2013, starting off with ROBLOX and eventually moving on to Unity. I've always enjoyed programming as comes naturally to me, and I love working through the puzzle of figuring things out for myself.</p>
+          <p>I've been making games since 2013 (10 years old), starting off with ROBLOX and eventually moving on to Unity. I've always enjoyed programming as it comes naturally to me, and I love working through the puzzle of figuring things out for myself.</p>
           <p>Outside of game development, I enjoy playing tabletop games, listening to music and tinkering with Linux.</p>
         </div>
         <div>
