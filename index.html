@@ -32,7 +32,7 @@
     img { max-width: 100%; display: block; }
     .container { max-width: 960px; margin: 0 auto; padding: 0 28px; }
     section { padding: 72px 0; }
-
+ 
     /* NAV */
     nav { position: sticky; top: 0; z-index: 100; background: var(--surface); border-bottom: 1px solid var(--border); }
     .nav-inner { max-width: 960px; margin: 0 auto; padding: 0 28px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
@@ -40,24 +40,104 @@
     .nav-links { display: flex; gap: 28px; list-style: none; }
     .nav-links a { font-size: 0.88rem; color: var(--muted); transition: color var(--transition); }
     .nav-links a:hover { color: var(--accent); text-decoration: none; }
-
+ 
     /* HERO */
     .hero { background: var(--surface); border-bottom: 1px solid var(--border); padding: 72px 0 64px; }
-    .hero-inner { max-width: 960px; margin: 0 auto; padding: 0 28px; display: flex; align-items: center; gap: 48px; }
+    .hero-inner {
+      max-width: 960px; margin: 0 auto; padding: 0 28px;
+      display: flex; align-items: center; gap: 48px;
+      justify-content: space-between;
+    }
+    .hero-left { display: flex; align-items: center; gap: 32px; flex: 1; min-width: 0; }
     .brand-image-wrap { flex-shrink: 0; width: 120px; height: 120px; border-radius: 50%; overflow: hidden; border: 2px solid var(--border); background: var(--bg); }
     .brand-image-wrap img { width: 100%; height: 100%; object-fit: cover; }
     .brand-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-family: var(--heading-font); font-size: 2rem; color: var(--muted); }
     .hero-text h1 { font-family: var(--heading-font); font-size: clamp(2rem, 5vw, 3rem); font-weight: 400; line-height: 1.15; margin-bottom: 12px; }
-    .hero-text p { color: var(--muted); font-size: 1rem; max-width: 480px; margin-bottom: 24px; }
+    .hero-text p { color: var(--muted); font-size: 1rem; max-width: 360px; margin-bottom: 24px; }
     .btn { display: inline-block; padding: 11px 26px; background: var(--accent); color: #1a1028; font-size: 0.88rem; font-weight: 600; border-radius: var(--radius); transition: opacity var(--transition); }
     .btn:hover { opacity: 0.85; text-decoration: none; }
-    @media (max-width: 580px) { .hero-inner { flex-direction: column; gap: 24px; } }
-
+ 
+    /* HIGHLIGHT REEL */
+    .highlight-reel {
+      flex-shrink: 0;
+      width: 300px;
+    }
+    .reel-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .reel-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .reel-tab {
+      font-family: var(--body-font);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color var(--transition), border-color var(--transition), background var(--transition);
+    }
+    .reel-tab:hover { color: var(--accent); border-color: var(--accent); }
+    .reel-tab.active { background: var(--tag-bg); border-color: var(--accent); color: var(--accent); }
+    .reel-viewport {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .reel-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .reel-slide.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .reel-slide iframe,
+    .reel-slide video {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+    .reel-caption {
+      margin-top: 8px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-align: center;
+      min-height: 1.2em;
+      transition: opacity 0.2s ease;
+    }
+ 
+    @media (max-width: 820px) {
+      .hero-inner { flex-direction: column; align-items: flex-start; gap: 32px; }
+      .highlight-reel { width: 100%; }
+    }
+    @media (max-width: 580px) { .hero-left { flex-direction: column; gap: 20px; align-items: flex-start; } }
+ 
     /* SECTION HEADINGS */
     .section-header { margin-bottom: 40px; }
     .section-header h2 { font-family: var(--heading-font); font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: 400; margin-bottom: 6px; }
     .section-header p { color: var(--muted); font-size: 0.93rem; }
-
+ 
     /* GAME CARDS */
     .games-grid { display: grid; gap: 32px; }
     .game-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: box-shadow var(--transition); }
@@ -67,21 +147,21 @@
     .game-genre { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--tag-text); background: var(--tag-bg); padding: 3px 10px; border-radius: 4px; }
     .game-body { padding: 24px 28px; }
     .media-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
-
+ 
     /* VIDEOS */
     .videos-wrap { display: grid; gap: 14px; margin-bottom: 24px; }
     .videos-wrap.two-cols { grid-template-columns: 1fr 1fr; }
     @media (max-width: 600px) { .videos-wrap.two-cols { grid-template-columns: 1fr; } }
     .video-container { position: relative; padding-bottom: 56.25%; height: 0; background: var(--bg); border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
     .video-container iframe, .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-
+ 
     /* SCREENSHOTS */
     .screenshots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin-bottom: 24px; }
     .screenshot-thumb { aspect-ratio: 16/9; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; cursor: pointer; transition: border-color var(--transition); }
     .screenshot-thumb:hover { border-color: var(--accent); }
     .screenshot-thumb img { width: 100%; height: 100%; object-fit: cover; }
     .screenshot-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--muted); }
-
+ 
     /* INFO PANELS */
     .game-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     @media (max-width: 580px) { .game-info-grid { grid-template-columns: 1fr; } }
@@ -90,74 +170,35 @@
     .info-box p, .info-box ul { font-size: 0.91rem; color: var(--text); line-height: 1.65; }
     .info-box ul { padding-left: 16px; }
     .info-box li { margin-bottom: 3px; }
-
+ 
     /* CODE SNIPPETS */
     .snippet-section { margin-top: 20px; }
     .snippet-toggle {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-family: var(--body-font);
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      padding: 7px 14px;
-      border-radius: 4px;
-      cursor: pointer;
+      display: inline-flex; align-items: center; gap: 7px; background: none;
+      border: 1px solid var(--border); color: var(--muted); font-family: var(--body-font);
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; padding: 7px 14px;
+      border-radius: 4px; cursor: pointer;
       transition: color var(--transition), border-color var(--transition), background var(--transition);
     }
     .snippet-toggle:hover { color: var(--accent); border-color: var(--accent); background: rgba(202,170,240,0.06); }
-    .snippet-toggle .toggle-icon {
-      font-size: 0.65rem;
-      transition: transform var(--transition);
-      display: inline-block;
-    }
+    .snippet-toggle .toggle-icon { font-size: 0.65rem; transition: transform var(--transition); display: inline-block; }
     .snippet-toggle.open .toggle-icon { transform: rotate(90deg); }
-    .snippet-wrap {
-      display: none;
-      margin-top: 12px;
-      border-radius: 6px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-    }
+    .snippet-wrap { display: none; margin-top: 12px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
     .snippet-wrap.open { display: block; }
-    .snippet-filename {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      background: #16102a;
-      padding: 8px 16px;
-      border-bottom: 1px solid var(--border);
-      font-family: 'Courier New', monospace;
-    }
-    .snippet-wrap pre {
-      margin: 0;
-      max-height: 340px;
-      overflow-y: auto;
-      font-size: 0.82rem;
-      line-height: 1.65;
-    }
+    .snippet-filename { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); background: #16102a; padding: 8px 16px; border-bottom: 1px solid var(--border); font-family: 'Courier New', monospace; }
+    .snippet-wrap pre { margin: 0; max-height: 340px; overflow-y: auto; font-size: 0.82rem; line-height: 1.65; }
     .snippet-wrap pre::-webkit-scrollbar { width: 6px; }
     .snippet-wrap pre::-webkit-scrollbar-track { background: #16102a; }
     .snippet-wrap pre::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-    .snippet-wrap pre code.hljs {
-      background: #16102a !important;
-      padding: 18px !important;
-      border-radius: 0 !important;
-    }
-
+    .snippet-wrap pre code.hljs { background: #16102a !important; padding: 18px !important; border-radius: 0 !important; }
+ 
     /* LIGHTBOX */
     .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; }
     .lightbox.open { display: flex; }
     .lightbox img { max-width: 90vw; max-height: 85vh; border-radius: 6px; }
     .lightbox-close { position: absolute; top: 18px; right: 24px; font-size: 1.8rem; color: #fff; cursor: pointer; line-height: 1; opacity: 0.8; }
     .lightbox-close:hover { opacity: 1; }
-
+ 
     /* ABOUT */
     #about { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
     .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
@@ -165,29 +206,29 @@
     .about-text p { color: var(--muted); margin-bottom: 14px; font-size: 0.95rem; }
     .skills-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
     .skill-tag { font-size: 0.8rem; font-weight: 500; padding: 5px 12px; border: 1px solid var(--border); border-radius: 4px; color: var(--text); background: var(--bg); }
-
+ 
     /* CONTACT */
     #contact { text-align: center; }
     .contact-card { max-width: 500px; margin: 0 auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 40px 36px; box-shadow: var(--shadow); }
     .contact-card p { color: var(--muted); margin-bottom: 28px; font-size: 0.95rem; }
     .contact-email-link { display: inline-block; padding: 11px 28px; background: var(--accent); color: #1a1028; font-size: 0.9rem; font-weight: 600; border-radius: var(--radius); transition: opacity var(--transition); }
     .contact-email-link:hover { opacity: 0.85; text-decoration: none; }
-
+ 
     /* FOOTER */
     footer { padding: 24px; text-align: center; font-size: 0.8rem; color: var(--muted); border-top: 1px solid var(--border); }
-
+ 
     /* SCROLL REVEAL */
     .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
   </style>
 </head>
 <body>
-
+ 
   <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
     <span class="lightbox-close" onclick="closeLightbox()">&#x2715;</span>
     <img id="lightbox-img" src="" alt="Screenshot enlarged" />
   </div>
-
+ 
   <nav>
     <div class="nav-inner">
       <span class="nav-logo">Seth Petkau</span>
@@ -198,21 +239,52 @@
       </ul>
     </div>
   </nav>
-
+ 
   <!-- HERO -->
   <div class="hero">
     <div class="hero-inner">
-      <div class="brand-image-wrap">
-        <div class="brand-placeholder">YN</div>
+ 
+      <!-- Left: avatar + text -->
+      <div class="hero-left">
+        <div class="brand-image-wrap">
+          <img src="brandiconv1.png" alt="Seth Petkau logo" />
+        </div>
+        <div class="hero-text">
+          <h1>Seth Petkau</h1>
+          <p>Game Developer specialising in gameplay programming. Based in Miramichi. Open to opportunities.</p>
+          <a href="#games" class="btn">View Portfolio</a>
+        </div>
       </div>
-      <div class="hero-text">
-        <h1>Seth Petkau</h1>
-        <p>Game Developer specialising in gameplay programming. Based in Miramichi. Open to opportunities.</p>
-        <a href="#games" class="btn">View Portfolio</a>
+ 
+      <!-- Right: highlight reel -->
+		<div class="highlight-reel">
+		  <p class="reel-label">Highlight Reel</p>
+		  <div class="reel-viewport">
+			<video controls width="100%" title="Portfolio Highlight Reel">
+			  <source src="highlightreel.mp4" type="video/mp4">
+			  Your browser does not support the video tag.
+			</video>
+		  </div>
+		</div>
+          <!-- Slide 1: Horse Adventure (YouTube) -->
+          <div class="reel-slide" data-type="youtube" data-src="https://www.youtube.com/embed/eV0AOUS_fwA">
+            <!-- loaded lazily on tab click -->
+          </div>
+          <!-- Slide 2: Zombie Shooter (local video) -->
+          <div class="reel-slide" data-type="video" data-src="zombieshooter/ZombieSurvivalGameplayCompressed.mp4">
+            <!-- loaded lazily on tab click -->
+          </div>
+          <!-- Slide 3: Untitled RPG (local video) -->
+          <div class="reel-slide" data-type="video" data-src="untitledrpg/UntitledRPGGameplay.mp4">
+            <!-- loaded lazily on tab click -->
+          </div>
+        </div>
+        <p class="reel-caption" id="reelCaption">Action RPG &mdash; 1.8M+ visits on Roblox</p>
       </div>
+ 
     </div>
   </div>
-
+ 
   <!-- GAMES -->
   <section id="games">
     <div class="container">
@@ -221,7 +293,7 @@
         <p>A few projects of mine that I've worked on over the years.</p>
       </div>
       <div class="games-grid">
-
+ 
         <!-- DIGIMON ORIGINS -->
         <div class="game-card reveal">
           <div class="game-header">
@@ -260,8 +332,6 @@
                 </ul>
               </div>
             </div>
-
-            <!-- CODE SNIPPET -->
             <div class="snippet-section">
               <button class="snippet-toggle" onclick="toggleSnippet(this)">
                 <span class="toggle-icon">&#9654;</span> View Code Snippet
@@ -274,24 +344,24 @@
   -- updating environment settigns and applying new music tied to each region.
   local function LoadArea(area)
 	Transitioning = true
-
+ 
 	-- Fade out current music
 	TS:Create(Music, TweenInfo.new(2), {Volume = 0}):Play()
 	task.wait(2)
-
+ 
 	-- Apply new area settings
 	Music.SoundId = "rbxassetid://" .. area.ID.Value
 	Music.TimePosition = area:FindFirstChild("TimePos") and area.TimePos.Value or 0
-
+ 
 	Ambience(area.Name)
-
+ 
 	-- Fade in new music
 	TS:Create(Music, TweenInfo.new(2), {Volume = 0.5}):Play()
 	task.wait(2)
-
+ 
 	Transitioning = false
 end
-
+ 
 -- This method uses recursion to ensure that the correct area loads if the player enters a new area while still loading the previous one.
 -- Fun fact about this code snippet: I made a recursive method without even knowing what recursion was!      
 local function RepeatBack()
@@ -302,12 +372,12 @@ local function RepeatBack()
 		RepeatBack()
 	end
 end
-
+ 
   -- This method is an event trigger that, when one of the large music colliders are touched, begins loading the next area or defers to RepeatBack() if it's already transitioning.
   child.Touched:Connect(function(hit)
 	if hit.Parent == game.Players.LocalPlayer.Character then
 		LastTouched = child.Name
-
+ 
 		if not Transitioning then
 			CurrentlyPlaying = child.Name
 			LoadArea(child)
@@ -319,10 +389,9 @@ end)
 </code></pre>
               </div>
             </div>
-
           </div>
         </div>
-
+ 
         <!-- HORSE ADVENTURE -->
         <div class="game-card reveal">
           <div class="game-header">
@@ -358,8 +427,6 @@ end)
                 </ul>
               </div>
             </div>
-
-            <!-- CODE SNIPPET -->
             <div class="snippet-section">
               <button class="snippet-toggle" onclick="toggleSnippet(this)">
                 <span class="toggle-icon">&#9654;</span> View Code Snippet
@@ -370,13 +437,13 @@ end)
 // These lines of code are the audio-reactive visual system;
 // they are what drives the camera distortions and zoom depending on how loud the song is.
 phonkMusic.GetSpectrumData(spectrum, 0, FFTWindow.Rectangular);
-
+ 
 cineCamera.Lens.OrthographicSize = 3f - bassScaled;
 bloom.intensity.value = 1f + (bassScaled * 10);
 bloom.threshold.value = 1f - bassScaled;
 lens.intensity.value = 0f + bassScaled;
 chromAbb.intensity.value = bassScaled;
-
+ 
 // This is attached to the previous script; they handle the speed of how fast the colors change
 // on the UI, depending on how loud the music currently is.
 for (float interpolant = 0f; interpolant < 1f; interpolant += highestBass / 10f)
@@ -387,10 +454,9 @@ for (float interpolant = 0f; interpolant < 1f; interpolant += highestBass / 10f)
 </code></pre>
               </div>
             </div>
-
           </div>
         </div>
-
+ 
         <!-- ZOMBIE SHOOTER -->
         <div class="game-card reveal">
           <div class="game-header">
@@ -428,8 +494,6 @@ for (float interpolant = 0f; interpolant < 1f; interpolant += highestBass / 10f)
                 </ul>
               </div>
             </div>
-
-            <!-- CODE SNIPPET -->
             <div class="snippet-section">
               <button class="snippet-toggle" onclick="toggleSnippet(this)">
                 <span class="toggle-icon">&#9654;</span> View Code Snippet
@@ -451,8 +515,8 @@ if (_hp <= 0)
         transform.root.GetComponent<ZombieBasic>().hp = 0;
     }
 }
-
-
+ 
+ 
 // This is a method in an FPS Camera script that controls the recoil when firing your weapon.
 // It randomly determines the amount of recoil, multiplied by the guns recoil, and then
 // smoothly applies recoil and brings the camera back to its original position.
@@ -461,23 +525,22 @@ public void Recoil(float recoilX, float recoilY)
     recoilYawOffset += (Random.value - 0.5f) * recoilX;
     recoilPitchOffset -= Mathf.Abs(Random.value - 0.5f) * recoilY;
 }
-
+ 
 // In Update:
 float retainedYaw = recoilYawOffset * recoilRetention;
 float retainedPitch = recoilPitchOffset * recoilRetention;
-
+ 
 recoilYawOffset = Mathf.SmoothDamp(recoilYawOffset, retainedYaw, ref recoilYawVelocity, recoilRecoveryTime);
 recoilPitchOffset = Mathf.SmoothDamp(recoilPitchOffset, retainedPitch, ref recoilPitchVelocity, recoilRecoveryTime);
-
+ 
 float finalYaw = targetYaw + recoilYawOffset;
 float finalPitch = Mathf.Clamp(targetPitch + recoilPitchOffset, MinPitch, MaxPitch);
 </code></pre>
               </div>
             </div>
-
           </div>
         </div>
-
+ 
         <!-- UNTITLED RPG -->
         <div class="game-card reveal">
           <div class="game-header">
@@ -515,8 +578,6 @@ float finalPitch = Mathf.Clamp(targetPitch + recoilPitchOffset, MinPitch, MaxPit
                 </ul>
               </div>
             </div>
-
-            <!-- CODE SNIPPET -->
             <div class="snippet-section">
               <button class="snippet-toggle" onclick="toggleSnippet(this)">
                 <span class="toggle-icon">&#9654;</span> View Code Snippet
@@ -527,13 +588,13 @@ float finalPitch = Mathf.Clamp(targetPitch + recoilPitchOffset, MinPitch, MaxPit
 // These values are NetworkVariables, and the client's UI automatically updates through
 // these subscriptions, which eliminates the need for ClientRPCs nor manual sync calls.
 // Additionally, they are unsubscribed in OnNetworkDespawn, which prevents a memory leak.
-
+ 
 _onMeterChanged  = (_, v) => display.SetMeter(v, Ready.Value);
 _onReadyChanged  = (_, v) => display.SetReady(v);
 _onHPChanged     = (_, v) => display.SetHP(v, MaxHP.Value);
 _onMPChanged     = (_, v) => display.SetMP(v, MaxMP.Value);
 _onShieldChanged = (_, v) => display.SetShield(v);
-
+ 
 Meter.OnValueChanged        += _onMeterChanged;
 Ready.OnValueChanged        += _onReadyChanged;
 HP.OnValueChanged           += _onHPChanged;
@@ -542,14 +603,13 @@ ShieldAmount.OnValueChanged += _onShieldChanged;
 </code></pre>
               </div>
             </div>
-
           </div>
         </div>
-
+ 
       </div>
     </div>
   </section>
-
+ 
   <section id="about">
     <div class="container">
       <div class="section-header">
@@ -584,7 +644,7 @@ ShieldAmount.OnValueChanged += _onShieldChanged;
       </div>
     </div>
   </section>
-
+ 
   <section id="contact">
     <div class="container">
       <div class="section-header" style="text-align:center;">
@@ -593,23 +653,20 @@ ShieldAmount.OnValueChanged += _onShieldChanged;
       </div>
       <div class="contact-card reveal">
         <p>Whether you're looking to hire, collaborate on a project, or just want to chat about games — feel free to reach out and I'll get back to you as soon as I can.</p>
-        <a class="contact-email-link" href="mailto:your@email.com">sethpetkau@hotmail.com</a>
+        <a class="contact-email-link" href="mailto:sethpetkau@hotmail.com">sethpetkau@hotmail.com</a>
       </div>
     </div>
   </section>
-
+ 
   <footer>
     &copy; <span id="year"></span> Seth Petkau &mdash; Game Developer
   </footer>
-
+ 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <script>
-    // Syntax highlighting
     hljs.highlightAll();
-
-    // Year
     document.getElementById('year').textContent = new Date().getFullYear();
-
+ 
     // Scroll reveal
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => {
@@ -617,7 +674,7 @@ ShieldAmount.OnValueChanged += _onShieldChanged;
       });
     }, { threshold: 0.08 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
+ 
     // Lightbox
     function openLightbox(src) {
       document.getElementById('lightbox-img').src = src;
@@ -629,7 +686,7 @@ ShieldAmount.OnValueChanged += _onShieldChanged;
       }
     }
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
-
+ 
     // Code snippet toggle
     function toggleSnippet(btn) {
       btn.classList.toggle('open');
@@ -637,6 +694,63 @@ ShieldAmount.OnValueChanged += _onShieldChanged;
       wrap.classList.toggle('open');
       btn.querySelector('.toggle-icon').textContent = wrap.classList.contains('open') ? '▼' : '▶';
     }
+ 
+    // Highlight reel
+    const reelCaptions = [
+      'Action RPG \u2014 1.8M+ visits on Roblox',
+      'Platformer Hack n\u2019 Slash \u2014 Unity',
+      'FPS Wave Shooter \u2014 Unity',
+      'Multiplayer Dungeon-Crawler \u2014 In Development',
+    ];
+ 
+    const slides = document.querySelectorAll('.reel-slide');
+    const tabs   = document.querySelectorAll('.reel-tab');
+    const caption = document.getElementById('reelCaption');
+    let activeIndex = 0;
+ 
+    function loadSlide(slide) {
+      if (slide.dataset.loaded) return;
+      slide.dataset.loaded = 'true';
+      const type = slide.dataset.type;
+      const src  = slide.dataset.src;
+      if (type === 'youtube') {
+        const iframe = document.createElement('iframe');
+        iframe.src = src;
+        iframe.allowFullscreen = true;
+        iframe.loading = 'lazy';
+        iframe.title = 'Game Highlight';
+        slide.appendChild(iframe);
+      } else if (type === 'video') {
+        const video = document.createElement('video');
+        video.controls = true;
+        const source = document.createElement('source');
+        source.src = src;
+        source.type = 'video/mp4';
+        video.appendChild(source);
+        slide.appendChild(video);
+      }
+    }
+ 
+    // Mark the first slide as already loaded (it has inline content)
+    slides[0].dataset.loaded = 'true';
+ 
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const idx = parseInt(tab.dataset.index);
+        if (idx === activeIndex) return;
+ 
+        // Deactivate old
+        tabs[activeIndex].classList.remove('active');
+        slides[activeIndex].classList.remove('active');
+ 
+        // Activate new
+        activeIndex = idx;
+        tabs[activeIndex].classList.add('active');
+        loadSlide(slides[activeIndex]);
+        slides[activeIndex].classList.add('active');
+        caption.textContent = reelCaptions[activeIndex];
+      });
+    });
   </script>
 </body>
 </html>
