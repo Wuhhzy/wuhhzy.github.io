@@ -182,9 +182,19 @@
 	  flex-wrap: wrap;
 	  gap: 8px;
 	  margin-bottom: 0;
+	  border-bottom: 1px solid var(--border);
+	  padding-bottom: 0;
 	}
 	.snippet-toggles .snippet-toggle {
 	  margin: 0;
+	  border-bottom: 2px solid transparent;
+	  border-radius: 4px 4px 0 0;
+	  position: relative;
+	  bottom: -1px; /* sits flush with the border-bottom line */
+	}
+	.snippet-toggles .snippet-toggle.open {
+	  border-bottom-color: var(--accent);
+	  color: var(--accent);
 	}
     .snippet-toggle:hover { color: var(--accent); border-color: var(--accent); background: rgba(202,170,240,0.06); }
     .snippet-toggle .toggle-icon { font-size: 0.65rem; transition: transform var(--transition); display: inline-block; }
@@ -324,13 +334,16 @@
             </div>
 
 			  <div class="snippet-section">
-			  <button class="snippet-toggle" onclick="toggleSnippet(this)">
-			    <span class="toggle-icon">&#9654;</span> Music Player
-			  </button>
-			  <div class="snippet-wrap">
-			    <div class="snippet-filename">MusicPlayer.lua</div>
-			    <pre><code class="language-lua">
--- MusicPlayer: Manages ambiance, music and map chunk loading.
+				  <div class="snippet-toggles">
+				    <button class="snippet-toggle" onclick="toggleSnippet(this)"><span class="toggle-icon">▶</span> Music Player</button>
+				    <button class="snippet-toggle" onclick="toggleSnippet(this)"><span class="toggle-icon">▶</span> Discord API</button>
+				    <button class="snippet-toggle" onclick="toggleSnippet(this)"><span class="toggle-icon">▶</span> Enemy AI Following</button>
+				    <button class="snippet-toggle" onclick="toggleSnippet(this)"><span class="toggle-icon">▶</span> Enemy Stat Module</button>
+				  </div>
+				  <!-- wrap 1 -->
+				  <div class="snippet-wrap">
+				    <div class="snippet-filename">MusicPlayer.lua</div>
+				    <pre><code class="language-lua">-- MusicPlayer: Manages ambiance, music and map chunk loading.
 -- This method handles the transitions between areas by fading audio,
 -- updating environment settigns and applying new music tied to each region.
 local function LoadArea(area)
@@ -376,19 +389,12 @@ child.Touched:Connect(function(hit)
 			RepeatBack()
 		end
 	end
-end)
-			    </code></pre>
-			  </div>
-			</div>
-
-			  <div class="snippet-section">
-			  <button class="snippet-toggle" onclick="toggleSnippet(this)">
-			    <span class="toggle-icon">&#9654;</span> Discord API
-			  </button>
-			  <div class="snippet-wrap">
-			    <div class="snippet-filename">DiscordAPI.lua</div>
-			    <pre><code class="language-lua">
--- This script fires when a player triggers the event to save their data.
+end)</code></pre>
+				  </div>
+				  <!-- wrap 2 -->
+				  <div class="snippet-wrap">
+				    <div class="snippet-filename">DiscordAPI.lua</div>
+				    <pre><code class="language-lua">-- This script fires when a player triggers the event to save their data.
 -- It creates a table that contains the player's name and all of their saved stats, encodes it to JSON and then sends it to our discord server.
 -- This was created in order to track player save data, so that in the event of their save data being corrupted or rolled back,
 -- we would have a "receipt" of their saves and be able to return it to our last saved state.
@@ -403,18 +409,12 @@ game.ReplicatedStorage.ExtraEvents.StatsAPI.OnServerEvent:connect(function(Plr)
     myTableJSON = hs:JSONEncode(myTable)
     hs:PostAsync(url, myTableJSON)
 end)
-			    </code></pre>
-			  </div>
-			</div>
-
-			  <div class="snippet-section">
-			  <button class="snippet-toggle" onclick="toggleSnippet(this)">
-			    <span class="toggle-icon">&#9654;</span> Enemy AI Following
-			  </button>
-			  <div class="snippet-wrap">
-			    <div class="snippet-filename">Follow.cs</div>
-			    <pre><code class="language-lua">
--- This is my simple AI script. Every second, it runs findNearestTorso,
+					</code></pre>
+				  </div>
+				  <!-- wrap 3 -->
+				  <div class="snippet-wrap">
+				    <div class="snippet-filename">Follow.lua</div>
+				    <pre><code class="language-lua">-- This is my simple AI script. Every second, it runs findNearestTorso,
 -- which gets every player in the game and sees if they are within a certain distance and has done the most damage to it.
 -- It then returns the target, and if it did not return null, begins moving towards them.
 -- Looking back, I do notice an issue where if the highest damaging player is out of distance, it won't target other
@@ -454,18 +454,12 @@ while true do
         isFollow.Value = false
     end
 end
-			    </code></pre>
-			  </div>
-			</div>
-
-			  <div class="snippet-section">
-			  <button class="snippet-toggle" onclick="toggleSnippet(this)">
-			    <span class="toggle-icon">&#9654;</span> Enemy Stat Module
-			  </button>
-			  <div class="snippet-wrap">
-			    <div class="snippet-filename">EnemyStatModule.lua</div>
-			    <pre><code class="language-lua">
--- This is the main module script for managing enemy drops, as well as a giant
+					</code></pre>
+				  </div>
+				  <!-- wrap 4 -->
+				  <div class="snippet-wrap">
+				    <div class="snippet-filename">EnemyStatModule.lua</div>
+				    <pre><code class="language-lua">-- This is the main module script for managing enemy drops, as well as a giant
 -- loot table for every enemy in the game. I've trimmed the drop tables majorly for the sake of this being a code snippet.
 local GlobalMultiplier = 0 -- 0 = 1x EXP, 1 = 2x EXP, etc
 
@@ -558,9 +552,9 @@ local module = {
 	}
 
 return module
-			    </code></pre>
-			  </div>
-			</div>
+					</code></pre>
+				  </div>
+				</div>
           </div>
         </div>
  
