@@ -323,24 +323,14 @@
               </div>
             </div>
 
-			<div class="snippet-section">
-			  <div class="snippet-toggles">
-			    <button class="snippet-toggle" onclick="toggleSnippet(this)">
-			      <span class="toggle-icon">&#9654;</span> MusicPlayer.lua
-			    </button>
-			    <button class="snippet-toggle" onclick="toggleSnippet(this)">
-			      <span class="toggle-icon">&#9654;</span> DiscordAPI.lua
-			    </button>
-				<button class="snippet-toggle" onclick="toggleSnippet(this)">
-			      <span class="toggle-icon">&#9654;</span> FollowAI.lua
-			    </button>
-				<button class="snippet-toggle" onclick="toggleSnippet(this)">
-			      <span class="toggle-icon">&#9654;</span> EnemyDropModule.lua
-			    </button>
-			  </div>
+			  <div class="snippet-section">
+			  <button class="snippet-toggle" onclick="toggleSnippet(this)">
+			    <span class="toggle-icon">&#9654;</span> Music Player
+			  </button>
 			  <div class="snippet-wrap">
 			    <div class="snippet-filename">MusicPlayer.lua</div>
-			    <pre><code class="language-lua">-- MusicPlayer: Manages ambiance, music and map chunk loading.
+			    <pre><code class="language-lua">
+-- MusicPlayer: Manages ambiance, music and map chunk loading.
 -- This method handles the transitions between areas by fading audio,
 -- updating environment settigns and applying new music tied to each region.
 local function LoadArea(area)
@@ -386,12 +376,19 @@ child.Touched:Connect(function(hit)
 			RepeatBack()
 		end
 	end
-end)</code></pre>
-				  
+end)
+			    </code></pre>
 			  </div>
+			</div>
+
+			  <div class="snippet-section">
+			  <button class="snippet-toggle" onclick="toggleSnippet(this)">
+			    <span class="toggle-icon">&#9654;</span> Discord API
+			  </button>
 			  <div class="snippet-wrap">
 			    <div class="snippet-filename">DiscordAPI.lua</div>
-			    <pre><code class="language-lua">-- This script fires when a player triggers the event to save their data.
+			    <pre><code class="language-lua">
+-- This script fires when a player triggers the event to save their data.
 -- It creates a table that contains the player's name and all of their saved stats, encodes it to JSON and then sends it to our discord server.
 -- This was created in order to track player save data, so that in the event of their save data being corrupted or rolled back,
 -- we would have a "receipt" of their saves and be able to return it to our last saved state.
@@ -406,12 +403,18 @@ game.ReplicatedStorage.ExtraEvents.StatsAPI.OnServerEvent:connect(function(Plr)
     myTableJSON = hs:JSONEncode(myTable)
     hs:PostAsync(url, myTableJSON)
 end)
-				</code></pre>
+			    </code></pre>
 			  </div>
+			</div>
 
-				<div class="snippet-wrap">
-			    <div class="snippet-filename">FollowAI.lua</div>
-			    <pre><code class="language-lua">-- This is my simple AI script. Every second, it runs findNearestTorso,
+			  <div class="snippet-section">
+			  <button class="snippet-toggle" onclick="toggleSnippet(this)">
+			    <span class="toggle-icon">&#9654;</span> Enemy AI Following
+			  </button>
+			  <div class="snippet-wrap">
+			    <div class="snippet-filename">Follow.cs</div>
+			    <pre><code class="language-lua">
+-- This is my simple AI script. Every second, it runs findNearestTorso,
 -- which gets every player in the game and sees if they are within a certain distance and has done the most damage to it.
 -- It then returns the target, and if it did not return null, begins moving towards them.
 -- Looking back, I do notice an issue where if the highest damaging player is out of distance, it won't target other
@@ -451,19 +454,18 @@ while true do
         isFollow.Value = false
     end
 end
-				</code></pre>
+			    </code></pre>
 			  </div>
-				
 			</div>
 
-			  
-            <div class="snippet-section">
-              <button class="snippet-toggle" onclick="toggleSnippet(this)">
-                <span class="toggle-icon">&#9654;</span> View Code Snippet
-              </button>
-              <div class="snippet-wrap">
-                <div class="snippet-filename">EnemyDropModule.lua</div>
-                <pre><code class="language-lua">-- This is the main module script for managing enemy drops, as well as a giant
+			  <div class="snippet-section">
+			  <button class="snippet-toggle" onclick="toggleSnippet(this)">
+			    <span class="toggle-icon">&#9654;</span> Enemy Stat Module
+			  </button>
+			  <div class="snippet-wrap">
+			    <div class="snippet-filename">EnemyStatModule.lua</div>
+			    <pre><code class="language-lua">
+-- This is the main module script for managing enemy drops, as well as a giant
 -- loot table for every enemy in the game. I've trimmed the drop tables majorly for the sake of this being a code snippet.
 local GlobalMultiplier = 0 -- 0 = 1x EXP, 1 = 2x EXP, etc
 
@@ -556,9 +558,9 @@ local module = {
 	}
 
 return module
-</code></pre>
-              </div>
-            </div>
+			    </code></pre>
+			  </div>
+			</div>
           </div>
         </div>
  
