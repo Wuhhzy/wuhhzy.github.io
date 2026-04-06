@@ -172,41 +172,36 @@
     .info-box li { margin-bottom: 3px; }
  
     /* CODE SNIPPETS */
-    .snippet-section {
-	  margin-top: 20px;
-	  display: flex;
-	  flex-direction: column;
+	.snippet-section { margin-top: 20px; display: flex; flex-direction: column; }
+	.snippet-toggles { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 0; }
+	.snippet-toggles .snippet-toggle { margin: 0; }
+	.snippet-toggle {
+	  display: inline-flex;
+	  align-items: center;
+	  gap: 7px;
+	  background: none;
+	  border: 1px solid var(--border);
+	  color: var(--muted);
+	  font-family: var(--body-font);
+	  font-size: 0.8rem;
+	  font-weight: 600;
+	  letter-spacing: 0.04em;
+	  padding: 7px 14px;
+	  border-radius: 4px;
+	  cursor: pointer;
+	  transition: color var(--transition), border-color var(--transition), background var(--transition);
 	}
-	.snippet-toggles {
-	  display: flex;
-	  flex-wrap: wrap;
-	  gap: 8px;
-	  margin-bottom: 0;
-	  border-bottom: 1px solid var(--border);
-	  padding-bottom: 0;
-	}
-	.snippet-toggles .snippet-toggle {
-	  margin: 0;
-	  border-bottom: 2px solid transparent;
-	  border-radius: 4px 4px 0 0;
-	  position: relative;
-	  bottom: -1px; /* sits flush with the border-bottom line */
-	}
-	.snippet-toggles .snippet-toggle.open {
-	  border-bottom-color: var(--accent);
-	  color: var(--accent);
-	}
-    .snippet-toggle:hover { color: var(--accent); border-color: var(--accent); background: rgba(202,170,240,0.06); }
-    .snippet-toggle .toggle-icon { font-size: 0.65rem; transition: transform var(--transition); display: inline-block; }
-    .snippet-toggle.open .toggle-icon { transform: rotate(90deg); }
-    .snippet-wrap { display: none; margin-top: 12px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
-    .snippet-wrap.open { display: block; }
-    .snippet-filename { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); background: #16102a; padding: 8px 16px; border-bottom: 1px solid var(--border); font-family: 'Courier New', monospace; }
-    .snippet-wrap pre { margin: 0; max-height: 340px; overflow-y: auto; font-size: 0.82rem; line-height: 1.65; }
-    .snippet-wrap pre::-webkit-scrollbar { width: 6px; }
-    .snippet-wrap pre::-webkit-scrollbar-track { background: #16102a; }
-    .snippet-wrap pre::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-    .snippet-wrap pre code.hljs { background: #16102a !important; padding: 18px !important; border-radius: 0 !important; }
+	.snippet-toggle:hover { color: var(--accent); border-color: var(--accent); background: rgba(202,170,240,0.06); }
+	.snippet-toggle.open { color: var(--accent); border-color: var(--accent); }
+	.snippet-toggle .toggle-icon { font-size: 0.65rem; display: inline-block; }
+	.snippet-wrap { display: none; margin-top: 12px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
+	.snippet-wrap.open { display: block; }
+	.snippet-filename { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); background: #16102a; padding: 8px 16px; border-bottom: 1px solid var(--border); font-family: 'Courier New', monospace; }
+	.snippet-wrap pre { margin: 0; max-height: 340px; overflow-y: auto; font-size: 0.82rem; line-height: 1.65; }
+	.snippet-wrap pre::-webkit-scrollbar { width: 6px; }
+	.snippet-wrap pre::-webkit-scrollbar-track { background: #16102a; }
+	.snippet-wrap pre::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+	.snippet-wrap pre code.hljs { background: #16102a !important; padding: 18px !important; border-radius: 0 !important; }
  
     /* LIGHTBOX */
     .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; }
@@ -268,7 +263,6 @@
         <div class="hero-text">
           <h1>Seth Petkau</h1>
           <p>Game Developer specialising in gameplay programming. Based in Miramichi. Open to opportunities.</p>
-          <a href="#games" class="btn">View Portfolio</a>
         </div>
       </div>
  
