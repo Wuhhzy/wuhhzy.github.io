@@ -60,7 +60,7 @@
     /* HIGHLIGHT REEL */
     .highlight-reel {
       flex-shrink: 0;
-      width: 300px;
+      width: 500px;
     }
     .reel-label {
       font-size: 0.72rem;
@@ -92,6 +92,15 @@
     .reel-tab:hover { color: var(--accent); border-color: var(--accent); }
     .reel-tab.active { background: var(--tag-bg); border-color: var(--accent); color: var(--accent); }
     .reel-viewport {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+	.reel-viewport iframe {
       position: relative;
       width: 100%;
       aspect-ratio: 16/9;
