@@ -293,6 +293,7 @@
           <div class="game-header">
             <h3 class="game-title">Digimon Origins</h3>
             <span class="game-genre">Action RPG</span>
+			  <span class="game-genre">Roblox</span>
           </div>
           <div class="game-body">
             <p class="media-label">Popular Youtuber's Gameplay</p>
@@ -337,9 +338,9 @@
 				  <!-- wrap 1 -->
 				  <div class="snippet-wrap">
 				    <div class="snippet-filename">MusicPlayer.lua</div>
-				    <pre><code class="language-lua">-- MusicPlayer: Manages ambiance, music and map chunk loading.
+				    <pre><code class="language-lua">-- MusicPlayer: Manages ambiance and music.
 -- This method handles the transitions between areas by fading audio,
--- updating environment settigns and applying new music tied to each region.
+-- updating environment settings and applying new music tied to each region.
 local function LoadArea(area)
 	Transitioning = true
  
@@ -371,7 +372,7 @@ local function RepeatBack()
 	end
 end
  
--- This method is an event trigger that, when one of the large music colliders are touched, begins loading the next area or defers to RepeatBack() if it's already transitioning.
+-- Triggers area loading on player contact, deferring to RepeatBack() if a transition is already in progress.
 child.Touched:Connect(function(hit)
 	if hit.Parent == game.Players.LocalPlayer.Character then
 		LastTouched = child.Name
@@ -388,10 +389,9 @@ end)</code></pre>
 				  <!-- wrap 2 -->
 				  <div class="snippet-wrap">
 				    <div class="snippet-filename">DiscordAPI.lua</div>
-				    <pre><code class="language-lua">-- This script fires when a player triggers the event to save their data.
--- It creates a table that contains the player's name and all of their saved stats, encodes it to JSON and then sends it to our discord server.
--- This was created in order to track player save data, so that in the event of their save data being corrupted or rolled back,
--- we would have a "receipt" of their saves and be able to return it to our last saved state.
+				    <pre><code class="language-lua">-- Serializes the player's full save state to JSON and posts it to a Discord webhook
+-- as a backup receipt. Since this runs in ServerScriptService, the webhook URL
+-- is never exposed to the client.
 hs = game:GetService("HttpService")
 url = "https://discordapp.com/api/webhooks/576857150358290459/b9tDH5zV3MsffQgLmpx2m7lU0J337GD4dn3cOxPI4GhsNzBE4K8SnZY2hmcnIcUSpJGX"
 game.ReplicatedStorage.ExtraEvents.StatsAPI.OnServerEvent:connect(function(Plr)
@@ -408,11 +408,9 @@ end)
 				  <!-- wrap 3 -->
 				  <div class="snippet-wrap">
 				    <div class="snippet-filename">Follow.lua</div>
-				    <pre><code class="language-lua">-- This is my simple AI script. Every second, it runs findNearestTorso,
--- which gets every player in the game and sees if they are within a certain distance and has done the most damage to it.
--- It then returns the target, and if it did not return null, begins moving towards them.
--- Looking back, I do notice an issue where if the highest damaging player is out of distance, it won't target other
--- characters, but I am aware of that and would know better now moving forwards.
+				    <pre><code class="language-lua">-- Targets the highest-damage dealer within range. Known limitation: if that
+-- player leaves range, no fallback target is selected. I'd now add a secondary
+-- pass for the next closest player.
 local isFollow = script.Parent.isFollowing
 local botroot = script.Parent.HumanoidRootPart
 
@@ -453,11 +451,10 @@ end
 				  <!-- wrap 4 -->
 				  <div class="snippet-wrap">
 				    <div class="snippet-filename">EnemyStatModule.lua</div>
-				    <pre><code class="language-lua">-- This is the main module script for managing enemy drops, as well as a giant
--- loot table for every enemy in the game. I've trimmed the drop tables majorly for the sake of this being a code snippet.
+				    <pre><code class="language-lua">-- Rewards are proportional to each player's damage contribution (mult = dmg/maxHP),
+-- then scaled by loot pass multiplier, global event multiplier, and halved if overleveled.
 local GlobalMultiplier = 0 -- 0 = 1x EXP, 1 = 2x EXP, etc
 
--- This is a method used by the DropStats method to notify the player of obtaining a drop.
 local Sys = require(script.Parent.Stats.StatSys)
 Notify = function(player,item)
 	local notice = game.ServerStorage.ExtraStorage.Notice:Clone()
@@ -472,22 +469,19 @@ Notify = function(player,item)
 	end
 
 local module = {
-	-- This is the module that, when an enemy dies, it rewards all players who fought it.
 	DropStats = function(mob,stats)
 		for _, child in pairs(mob.Names:GetChildren()) do
 		local dmg = child.Value
 		local mhp = mob.Humanoid.MaxHealth
-		local mult = dmg/mhp -- the mult represents the % of damage an individual player dealt to the enemy
-		local capmult = 1 -- capmult is a variable that, if the player is overleveled, divides the rewards by half.
+		local mult = dmg/mhp
+		local capmult = 1
 		if mult > 1 then mult = 1 end
 		local Plr = game.Players:FindFirstChild(child.Name)
 		if Plr ~= nil and Plr.Status.Level.Value >= stats.LevelReq then
 			if Plr.Status.Level.Value >= stats.LevelCap then
 				capmult = 2
 			end
-
-			-- We have special passes that players can buy to multiply the amount of EXP and Cash obtained,
-			-- the loot variable is used to represent that.
+						
 			local loot = 1
 			if Plr.Status.TripleLoot.Value == 1 then
 					loot = 3
@@ -557,6 +551,7 @@ return module
           <div class="game-header">
             <h3 class="game-title">Horse Adventure</h3>
             <span class="game-genre">Platformer Hack n' Slash</span>
+			  <span class="game-genre">Unity 6000.2.8f1</span>
           </div>
           <div class="game-body">
             <p class="media-label">Gameplay</p>
@@ -587,41 +582,101 @@ return module
                 </ul>
               </div>
             </div>
-            <div class="snippet-section">
-              <button class="snippet-toggle" onclick="toggleSnippet(this)">
-                <span class="toggle-icon">&#9654;</span> View Code Snippet
-              </button>
-              <div class="snippet-wrap">
-                <div class="snippet-filename">PlayerController.cs</div>
-                <pre><code class="language-csharp">
-// These lines of code are the audio-reactive visual system;
-// they are what drives the camera distortions and zoom depending on how loud the song is.
+
+			<div class="snippet-section">
+				  <div class="snippet-toggles">
+				    <button class="snippet-toggle" onclick="toggleSnippet(this)"><span class="toggle-icon">▶</span> Camera Manager</button>
+				    <button class="snippet-toggle" onclick="toggleSnippet(this)"><span class="toggle-icon">▶</span> Chicken AI</button>
+				  </div>
+				  <!-- wrap 1 -->
+				  <div class="snippet-wrap">
+				    <div class="snippet-filename">CameraManager.cs</div>
+				    <pre><code class="language-csharp">// Samples the frequency spectrum each frame and maps bass amplitude
+// to post-processing values — bloom, chromatic aberration, lens distortion,
+// and orthographic zoom all scale together for a reactive visual.
 phonkMusic.GetSpectrumData(spectrum, 0, FFTWindow.Rectangular);
- 
+
 cineCamera.Lens.OrthographicSize = 3f - bassScaled;
 bloom.intensity.value = 1f + (bassScaled * 10);
 bloom.threshold.value = 1f - bassScaled;
 lens.intensity.value = 0f + bassScaled;
 chromAbb.intensity.value = bassScaled;
- 
-// This is attached to the previous script; they handle the speed of how fast the colors change
-// on the UI, depending on how loud the music currently is.
+
+// Bass amplitude drives the interpolation step size —
+// louder music = larger increments = faster color transitions.
 for (float interpolant = 0f; interpolant < 1f; interpolant += highestBass / 10f)
 {
     exampleColor = Color.Lerp(colors[startColor], colors[endColor], interpolant);
     yield return null;
 }
-</code></pre>
-              </div>
-            </div>
+					</code></pre>
+				  </div>
+				  <!-- wrap 2 -->
+				  <div class="snippet-wrap">
+				    <div class="snippet-filename">ChickenAI.cs</div>
+				    <pre><code class="language-csharp">// Manages chase/attack/idle states by distance threshold.
+// Flips sprite scale based on direction rather than using a separate facing variable.
+private void FixedUpdate()
+{
+	if (isDead || isCharging || playerMovement.isDead) return;
+
+	float distance = Vector3.Distance(player.transform.position, transform.position);
+	if (distance < 3.5f && !attackDebounce)
+	{
+		StartCoroutine(chickenAttack());
+	}
+	else if (distance < 6f)
+	{
+		dir = (player.transform.position - transform.position).normalized;
+		Vector3 scale = transform.localScale;
+		scale.x = dir.x > 0 ? -1.6f : 1.6f;
+		transform.localScale = scale;
+		rb.linearVelocity = new Vector2(dir.x, dir.y) * 2 * Vector2.right;
+		animator.SetBool(IsWalking, true);
+	}
+	else
+	{
+		rb.linearVelocity = Vector2.zero;
+		animator.SetBool(IsWalking, false);
+	}
+}
+
+// Coroutine allows WaitForSeconds() to sequence the charge,
+// lunge, and cooldown as a single readable attack flow with a debounce.
+private IEnumerator ChickenAttack()
+{
+	isCharging = true;
+	attackDebounce = true;
+	animator.SetBool(IsCharging, true);
+	audioSource.PlayOneShot(swordCharge);
+	yield return new WaitForSeconds(0.4f);
+	if (!isDead)
+	{
+		audioSource.PlayOneShot(swordSwing);
+		chickenHitbox.SetActive(true);
+		rb.linearVelocity = new Vector2(dir.x, dir.y) * 13 * Vector2.right;
+		animator.SetBool(IsCharging, false);
+		animator.SetBool(IsAttacking, true);
+		yield return new WaitForSeconds(0.2f);
+		isCharging = false;
+		chickenHitbox.SetActive(false);
+		animator.SetBool(IsAttacking, false);
+		yield return new WaitForSeconds(0.6f);
+		attackDebounce = false;
+	}
+}
+					</code></pre>
+				  </div> 
           </div>
         </div>
+		</div>
  
         <!-- ZOMBIE SHOOTER -->
         <div class="game-card reveal">
           <div class="game-header">
             <h3 class="game-title">Zombie Shooter Game</h3>
             <span class="game-genre">FPS Wave Shooter</span>
+			  <span class="game-genre">Unity</span>
           </div>
           <div class="game-body">
             <p class="media-label">Gameplay</p>
@@ -654,50 +709,141 @@ for (float interpolant = 0f; interpolant < 1f; interpolant += highestBass / 10f)
                 </ul>
               </div>
             </div>
-            <div class="snippet-section">
-              <button class="snippet-toggle" onclick="toggleSnippet(this)">
-                <span class="toggle-icon">&#9654;</span> View Code Snippet
-              </button>
-              <div class="snippet-wrap">
-                <div class="snippet-filename">ZombieLimbHP.cs</div>
-                <pre><code class="language-csharp">
-// This code snippet is the limb dismemberment system; every limb has its own health pool,
-// and once depleted, checks to see what type of body part it is.
-if (_hp <= 0)
+
+<div class="snippet-section">
+				  <div class="snippet-toggles">
+				    <button class="snippet-toggle" onclick="toggleSnippet(this)"><span class="toggle-icon">▶</span> Zombie Limbs</button>
+				    <button class="snippet-toggle" onclick="toggleSnippet(this)"><span class="toggle-icon">▶</span> FPS Camera</button>
+					<button class="snippet-toggle" onclick="toggleSnippet(this)"><span class="toggle-icon">▶</span> Zombie AI</button>
+				  </div>
+				  <!-- wrap 1 -->
+				  <div class="snippet-wrap">
+				    <div class="snippet-filename">ZombieLimbHP.cs</div>
+				    <pre><code class="language-csharp">//Encapsulating HP in a properly lets destruction/crawl logic
+// trigger automatically on assignment rather than scattering
+// checks across the codebase.
+public int hp
 {
-    if (isLeg)
-    {
-        transform.root.GetComponent<ZombieBasic>().SetCrawling(true);
-    }
-    foreach (var mesh in destroyableMesh) mesh.SetActive(false);
-    if (isVitalPart)
-    {
-        transform.root.GetComponent<ZombieBasic>().hp = 0;
-    }
+	get => _hp;
+	set
+	{
+		_hp = value;
+		if (_hp <= 0)
+		{
+			if (isLeg)
+			{
+				transform.root.GetComponent&lt;ZombieBasic&gt().SetCrawling(true);
+			}
+			foreach (var mesh in destroyableMesh) mesh.SetActive(false);
+			if (isVitalPart)
+			{
+				transform.root.GetComponent&lt;ZombieBasic&gt().hp = 0;
+			}
+		}
+	}
 }
- 
- 
-// This is a method in an FPS Camera script that controls the recoil when firing your weapon.
-// It randomly determines the amount of recoil, multiplied by the guns recoil, and then
-// smoothly applies recoil and brings the camera back to its original position.
+
+// Reuses a single particle prefab, reconfigruing burst count
+// at runtime to differentiate graze hits (8) from kill shots (24).
+private void BloodParticle(bool killingShot, Transform hitTrans)
+{
+	var bfx = Instantiate(bloodPFX, hitTrans.position, hitTrans.rotation);
+	bfx.transform.parent = transform;
+
+	var splatParticle = bfx.GetComponent&lt;ParticleSystem&gt;();
+	splatParticle.Stop();
+
+	var splatEmission = splatParticle.emission;
+	if (killingShot)
+	{
+		splatEmission.SetBursts(
+		new ParticleSystem.Burst[]
+		{
+			new ParticleSystem.Burst(0.0f, 24)
+		});
+	}
+	else
+	{
+		splatEmission.rateOverTime = 0;
+		splatEmission.SetBursts(
+		new ParticleSystem.Burst[]
+		{
+			new ParticleSystem.Burst(0.0f, 8)
+		});
+	}
+
+	splatParticle.Play();
+	</code></pre>
+				  </div>
+				  <!-- wrap 2 -->
+				  <div class="snippet-wrap">
+				    <div class="snippet-filename">FPSCamera.cs</div>
+				    <pre><code class="language-csharp">private float recoilYawOffset, recoilPitchOffset;
+private float recoilYawVelocity, recoilPitchVelocity;
+private float recoilRetention = 0.95f;
+
+// Called externally by guns on fire — adds random horizontal
+// and upward kick to the recoil offsets.
 public void Recoil(float recoilX, float recoilY)
 {
     recoilYawOffset += (Random.value - 0.5f) * recoilX;
     recoilPitchOffset -= Mathf.Abs(Random.value - 0.5f) * recoilY;
 }
- 
-// In Update:
-float retainedYaw = recoilYawOffset * recoilRetention;
-float retainedPitch = recoilPitchOffset * recoilRetention;
- 
-recoilYawOffset = Mathf.SmoothDamp(recoilYawOffset, retainedYaw, ref recoilYawVelocity, recoilRecoveryTime);
-recoilPitchOffset = Mathf.SmoothDamp(recoilPitchOffset, retainedPitch, ref recoilPitchVelocity, recoilRecoveryTime);
- 
-float finalYaw = targetYaw + recoilYawOffset;
-float finalPitch = Mathf.Clamp(targetPitch + recoilPitchOffset, MinPitch, MaxPitch);
-</code></pre>
-              </div>
-            </div>
+
+void Update()
+{
+    // recoilRetention creates a natural decay curve each frame
+    // before SmoothDamp closes the remaining gap.
+    recoilYawOffset = Mathf.SmoothDamp(recoilYawOffset, recoilYawOffset * recoilRetention, ref recoilYawVelocity, 0.01f);
+    recoilPitchOffset = Mathf.SmoothDamp(recoilPitchOffset, recoilPitchOffset * recoilRetention, ref recoilPitchVelocity, 0.01f);
+
+    // Recoil offsets are layered on top of player look input,
+    // then the result is smooth-damped for a natural feeling camera.
+    float finalYaw = targetYaw + recoilYawOffset;
+    float finalPitch = Mathf.Clamp(targetPitch + recoilPitchOffset, MinPitch, MaxPitch);
+
+    yaw = Mathf.SmoothDamp(yaw, finalYaw, ref yawVelocity, 0.1f);
+    pitch = Mathf.SmoothDamp(pitch, finalPitch, ref pitchVelocity, 0.1f);
+
+    transform.localRotation = Quaternion.Euler(pitch, yaw, 0f);
+}
+					</code></pre>
+				  </div> 
+
+			  <!-- wrap 3 -->
+				  <div class="snippet-wrap">
+				    <div class="snippet-filename">ZombieBasic.cs</div>
+				    <pre><code class="language-csharp">private void TotalKill()
+{
+	GetComponent&lt;CapsuleCollider&gt().enabled = false;
+    GetComponent&lt;SphereCollider&gt().enabled = false;
+    animator.enabled = false;
+    StartCoroutine(DeathIE());
+}
+
+// Waits for ragdoll to settle, freezes it kinematic,
+// then sinks the corpse into the ground before destroying it.
+private IEnumerator DeathIE()
+{
+    yield return new WaitForSeconds(5f);
+
+    foreach (Transform child in GetComponentsInChildren&lt;Transform&gt())
+    {
+        Rigidbody rb = child.GetComponent&lt;Rigidbody&gt();
+        if (rb != null) rb.isKinematic = true;
+    }
+
+    for (int i = 0; i < 200; i++)
+    {
+        transform.Find("Base HumanPelvis").transform.position += new Vector3(0, -0.004f, 0);
+        yield return new WaitForSeconds(0.01f);
+    }
+
+    Destroy(this.gameObject);
+}
+					</code></pre>
+				  </div> 
+          </div>
           </div>
         </div>
  
@@ -706,6 +852,7 @@ float finalPitch = Mathf.Clamp(targetPitch + recoilPitchOffset, MinPitch, MaxPit
           <div class="game-header">
             <h3 class="game-title">Untitled RPG Game</h3>
             <span class="game-genre">Multiplayer Action RPG</span>
+			  <span class="game-genre">Unity</span>
           </div>
           <div class="game-body">
             <p class="media-label">Gameplay</p>
@@ -733,8 +880,8 @@ float finalPitch = Mathf.Clamp(targetPitch + recoilPitchOffset, MinPitch, MaxPit
                 <ul>
                   <li>Turn-based combat system</li>
                   <li>Multiplayer netcode</li>
-                  <li>Procedural map generation</li>
-                  <li>Performance profiling</li>
+                  <li>Cost-based enemy spawning system</li>
+                  <li>Only programmer (again)</li>
                 </ul>
               </div>
             </div>
