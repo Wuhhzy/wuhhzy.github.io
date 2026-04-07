@@ -501,11 +501,11 @@ local module = {
 						Sys.DropItem(Plr, stats.Drop)
 						Notify(Plr, stats.Drop)
 					end
-				 end
-			  end
+				end
 			end
-			end
-		end;
+		end
+	end
+end;
 	Stats = {
 		StarterArea = {
 			DropXAntibody = false, DropOmegaData = false,
@@ -534,10 +534,10 @@ local module = {
 				DropXAntibody = false, DropOmegaData = false, DropCoin = true,
 				EXP = 2500, Cash = 2500, XAnti = 0, OD = 0, CorruptedCoins = 1,
 				LevelReq = 40, LevelCap = 80,
-				};
-						}
+			};
 		}
 	}
+}
 
 return module
 					</code></pre>
@@ -771,6 +771,7 @@ private void BloodParticle(bool killingShot, Transform hitTrans)
 			new ParticleSystem.Burst(0.0f, 8)
 		});
 	}
+}
 
 	splatParticle.Play();
 	</code></pre>
@@ -885,31 +886,325 @@ private IEnumerator DeathIE()
                 </ul>
               </div>
             </div>
-            <div class="snippet-section">
-              <button class="snippet-toggle" onclick="toggleSnippet(this)">
-                <span class="toggle-icon">&#9654;</span> View Code Snippet
-              </button>
-              <div class="snippet-wrap">
-                <div class="snippet-filename">Character.cs</div>
-                <pre><code class="language-csharp">
-// These values are NetworkVariables, and the client's UI automatically updates through
-// these subscriptions, which eliminates the need for ClientRPCs nor manual sync calls.
-// Additionally, they are unsubscribed in OnNetworkDespawn, which prevents a memory leak.
- 
-_onMeterChanged  = (_, v) => display.SetMeter(v, Ready.Value);
-_onReadyChanged  = (_, v) => display.SetReady(v);
-_onHPChanged     = (_, v) => display.SetHP(v, MaxHP.Value);
-_onMPChanged     = (_, v) => display.SetMP(v, MaxMP.Value);
-_onShieldChanged = (_, v) => display.SetShield(v);
- 
-Meter.OnValueChanged        += _onMeterChanged;
-Ready.OnValueChanged        += _onReadyChanged;
-HP.OnValueChanged           += _onHPChanged;
-MP.OnValueChanged           += _onMPChanged;
-ShieldAmount.OnValueChanged += _onShieldChanged;
-</code></pre>
-              </div>
-            </div>
+
+			  <div class="snippet-section">
+				  <div class="snippet-toggles">
+				    <button class="snippet-toggle" onclick="toggleSnippet(this)"><span class="toggle-icon">▶</span> Character</button>
+				    <button class="snippet-toggle" onclick="toggleSnippet(this)"><span class="toggle-icon">▶</span> Player Network</button>
+					<button class="snippet-toggle" onclick="toggleSnippet(this)"><span class="toggle-icon">▶</span> Wave Generator</button>
+				    <button class="snippet-toggle" onclick="toggleSnippet(this)"><span class="toggle-icon">▶</span> Dungeon State</button>
+				    <button class="snippet-toggle" onclick="toggleSnippet(this)"><span class="toggle-icon">▶</span> Enemy Pool Definition</button>
+				    <button class="snippet-toggle" onclick="toggleSnippet(this)"><span class="toggle-icon">▶</span> Camp Manager</button>
+				  </div>
+				  <!-- wrap 1 -->
+				  <div class="snippet-wrap">
+				    <div class="snippet-filename">Character.cs</div>
+				    <pre><code class="language-csharp">// Delegates are stored by reference so they can be cleanly unsubscribed
+// in OnNetworkDespawn — avoids stale listeners on destroyed objects.
+private NetworkVariable&lt;float&gt;.OnValueChangedDelegate _onMeterChanged;
+private NetworkVariable&lt;bool&gt;.OnValueChangedDelegate  _onReadyChanged;
+private NetworkVariable&lt;int&gt;.OnValueChangedDelegate   _onHPChanged;
+private NetworkVariable&lt;int&gt;.OnValueChangedDelegate   _onMPChanged;
+private NetworkVariable&lt;int&gt;.OnValueChangedDelegate   _onShieldChanged;
+
+public override void OnNetworkSpawn()
+{
+    var display = GetComponent&lt;CombatEntityDisplay&gt;();
+    if (display != null)
+    {
+        // Wiring NetworkVariable callbacks to the display means every client's
+        // UI reacts to stat changes automatically, without manual ClientRpcs.
+        _onMeterChanged  = (_, v) =&gt; display.SetMeter(v, Ready.Value);
+        _onReadyChanged  = (_, v) =&gt; display.SetReady(v);
+        _onHPChanged     = (_, v) =&gt; display.SetHP(v, MaxHP.Value);
+        _onMPChanged     = (_, v) =&gt; display.SetMP(v, MaxMP.Value);
+        _onShieldChanged = (_, v) =&gt; display.SetShield(v);
+
+        Meter.OnValueChanged        += _onMeterChanged;
+        Ready.OnValueChanged        += _onReadyChanged;
+        HP.OnValueChanged           += _onHPChanged;
+        MP.OnValueChanged           += _onMPChanged;
+        ShieldAmount.OnValueChanged += _onShieldChanged;
+    }
+}
+
+public override void OnNetworkDespawn()
+{
+    var display = GetComponent&lt;CombatEntityDisplay&gt;();
+    if (display != null)
+    {
+        Meter.OnValueChanged        -= _onMeterChanged;
+        Ready.OnValueChanged        -= _onReadyChanged;
+        HP.OnValueChanged           -= _onHPChanged;
+        MP.OnValueChanged           -= _onMPChanged;
+        ShieldAmount.OnValueChanged -= _onShieldChanged;
+    }
+}
+
+// Server-only. Shield absorbs damage first before HP is touched.
+// On death, XP is distributed to every connected player.
+public virtual void TakeDamage(int damage)
+{
+    if (!IsServer || !Alive.Value) return;
+
+    if (ShieldAmount.Value &gt; 0)
+    {
+        int absorbed = Mathf.Min(ShieldAmount.Value, damage);
+        ShieldAmount.Value -= absorbed;
+        damage             -= absorbed;
+    }
+
+    if (damage &lt;= 0) return;
+
+    HP.Value -= damage;
+    ShowDamageRpc(damage);
+
+    if (HP.Value &lt;= 0)
+    {
+        HP.Value = 0; Alive.Value = false;
+        Ready.Value = false; Meter.Value = 0f;
+
+        if (IsAI)
+        {
+            foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
+            {
+                var p = NetworkManager.Singleton.SpawnManager
+                            .GetPlayerNetworkObject(clientId)
+                            ?.GetComponent&lt;PlayerProgression&gt;();
+                p?.AddXP(XPReward);
+            }
+        }
+    }
+}
+	</code></pre>
+				  </div>
+				  <!-- wrap 2 -->
+				  <div class="snippet-wrap">
+				    <div class="snippet-filename">PlayerNetwork.cs</div>
+				    <pre><code class="language-csharp">public void SubmitTurn(ActionData action)
+{
+    if (!IsOwner || !Ready.Value || !Alive.Value) return;
+    SubmitTurnServerRpc(action);
+}
+
+[Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Owner)]
+private void SubmitTurnServerRpc(ActionData action)
+{
+    if (!Ready.Value || !Alive.Value) return;
+
+    // ActorId is overwritten server-side — the client's value is never trusted.
+    action.ActorId = EntityId;
+    TickCooldowns();
+
+    if (action.Type == ActionType.BasicAttack || action.Type == ActionType.Skill)
+        PlayAttackAnimationRpc();
+
+    CombatManagerNetwork.Instance.ResolveAction(action);
+
+    // Sync cooldown and charge state back to the owning client only,
+    // so their action menu reflects accurate resource availability.
+    SyncSkillStateRpc(SkillStatePayload.FromArrays(_skillCooldowns, _skillCharges));
+}
+
+[Rpc(SendTo.Owner)]
+private void SyncSkillStateRpc(SkillStatePayload payload)
+{
+    ActionMenuUI.Instance?.RefreshSkillState(payload);
+}
+					</code></pre>
+				  </div> 
+
+			  <!-- wrap 3 -->
+				  <div class="snippet-wrap">
+				    <div class="snippet-filename">WaveGenerator.cs</div>
+				    <pre><code class="language-csharp">// Pure static utility — no MonoBehaviour, no networking.
+// Converts a budget + enemy pool into a list of sequential waves.
+public static class WaveGenerator
+{
+    private const int WAVE_SIZE_THRESHOLD = 4;
+
+    public static List&lt;List&lt;EnemyEntry&gt;&gt; Generate(
+        int budget, List&lt;EnemyEntry&gt; eligibleEnemies, bool largeWave = false)
+    {
+        if (largeWave) return GenerateLargeWave(budget, eligibleEnemies);
+
+        var flatList = PickEnemiesWithinBudget(budget, eligibleEnemies);
+        return SplitIntoWaves(flatList);
+    }
+
+    // Large wave modifier bypasses normal budget logic entirely —
+    // floods the encounter with as many cheap enemies as the budget allows.
+    private static List&lt;List&lt;EnemyEntry&gt;&gt; GenerateLargeWave(int budget, List&lt;EnemyEntry&gt; pool)
+    {
+        EnemyEntry cheapest = pool[0];
+        foreach (var e in pool)
+            if (e.Cost &lt; cheapest.Cost) cheapest = e;
+
+        int count = Mathf.Max(1, budget / cheapest.Cost);
+        var wave = new List&lt;EnemyEntry&gt;(count);
+        for (int i = 0; i &lt; count; i++) wave.Add(cheapest);
+        return new List&lt;List&lt;EnemyEntry&gt;&gt; { wave };
+    }
+
+    // Greedy random fill: picks enemies at random until the budget is exhausted.
+    // Rebuilds the affordable list each iteration to avoid over-spending.
+    private static List&lt;EnemyEntry&gt; PickEnemiesWithinBudget(int budget, List&lt;EnemyEntry&gt; pool)
+    {
+        var result    = new List&lt;EnemyEntry&gt;();
+        int remaining = budget;
+        int safety    = 60;
+
+        var affordable = new List&lt;EnemyEntry&gt;(pool.FindAll(e =&gt; e.Cost &lt;= remaining));
+
+        while (remaining &gt; 0 && affordable.Count &gt; 0 && safety-- &gt; 0)
+        {
+            var pick = affordable[Random.Range(0, affordable.Count)];
+            result.Add(pick);
+            remaining -= pick.Cost;
+
+            affordable.Clear();
+            foreach (var e in pool)
+                if (e.Cost &lt;= remaining) affordable.Add(e);
+        }
+        return result;
+    }
+
+    // Shuffles the flat enemy list, then distributes round-robin into waves
+    // so each wave has a roughly equal mix rather than front-loaded enemies.
+    private static List&lt;List&lt;EnemyEntry&gt;&gt; SplitIntoWaves(List&lt;EnemyEntry&gt; enemies)
+    {
+        var waves = new List&lt;List&lt;EnemyEntry&gt;&gt;();
+        if (enemies.Count == 0) return waves;
+
+        for (int i = enemies.Count - 1; i &gt; 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            (enemies[i], enemies[j]) = (enemies[j], enemies[i]);
+        }
+
+        int waveCount = Mathf.Max(1, Mathf.CeilToInt((float)enemies.Count / WAVE_SIZE_THRESHOLD));
+        for (int w = 0; w &lt; waveCount; w++) waves.Add(new List&lt;EnemyEntry&gt;());
+
+        for (int i = 0; i &lt; enemies.Count; i++)
+            waves[i % waveCount].Add(enemies[i]);
+
+        return waves;
+    }
+}
+					</code></pre>
+				  </div> 
+
+			  <!-- wrap 4 -->
+			  <div class="snippet-wrap">
+				<div class="snippet-filename">DungeonState.cs</div>
+				<pre><code class="language-csharp">// Attempts to resolve the floor vote after each submission.
+// Majority wins immediately; if all players vote with no majority,
+// the highest vote count wins with a random tiebreak.
+private void TryResolveVote()
+{
+    int playerCount = NetworkManager.Singleton.ConnectedClientsIds.Count;
+    int majority    = playerCount / 2 + 1;
+
+    var counts = new Dictionary&lt;int, int&gt;();
+    foreach (var v in _floorVotes.Values)
+    {
+        if (!counts.ContainsKey(v)) counts[v] = 0;
+        counts[v]++;
+    }
+
+    // Early exit: a majority has been reached
+    foreach (var kv in counts)
+        if (kv.Value &gt;= majority) { CommitSelection(kv.Key); return; }
+
+    // All players have voted but no majority — pick highest, random on tie
+    if (_floorVotes.Count &gt;= playerCount)
+    {
+        int best = -1, bestCount = -1;
+        foreach (var kv in counts)
+            if (kv.Value &gt; bestCount) { best = kv.Key; bestCount = kv.Value; }
+        CommitSelection(best);
+    }
+}
+				</code></pre>
+			  </div> 
+
+			  <!-- wrap 5 -->
+			  <div class="snippet-wrap">
+				<div class="snippet-filename">EnemyPoolDefinition.cs</div>
+				<pre><code class="language-csharp">// Enemies are culled from normal generation after CullThreshold floors
+// to keep encounters feeling fresh as the run progresses.
+// The largeWave modifier bypasses culling entirely for maximum chaos.
+public List&lt;EnemyEntry&gt; GetEligibleEnemies(int currentFloor, bool largeWave = false)
+{
+    if (largeWave) return Enemies;
+
+    var eligible = new List&lt;EnemyEntry&gt;();
+    foreach (var e in Enemies)
+        if (currentFloor &lt;= e.IntroducedAtFloor + CullThreshold)
+            eligible.Add(e);
+
+    // Fallback: if every enemy was culled, return the most expensive ones
+    // so the encounter still feels appropriately threatening.
+    if (eligible.Count == 0)
+    {
+        int maxCost = 0;
+        foreach (var e in Enemies) if (e.Cost &gt; maxCost) maxCost = e.Cost;
+        foreach (var e in Enemies) if (e.Cost == maxCost) eligible.Add(e);
+    }
+
+    return eligible;
+}
+				</code></pre>
+			  </div> 
+
+			  <!-- wrap 6 -->
+			  <div class="snippet-wrap">
+				<div class="snippet-filename">CampManager.cs</div>
+				<pre><code class="language-csharp">[Rpc(SendTo.Server)]
+public void SetReadyServerRpc(RpcParams rpcParams = default)
+{
+    if (_departing) return;
+
+    ulong sender = rpcParams.Receive.SenderClientId;
+    if (!_readyClients.Add(sender)) return; // deduplicate double-ready calls
+
+    ReadyCount.Value = _readyClients.Count;
+    int total        = NetworkManager.ConnectedClientsIds.Count;
+
+    if (_readyClients.Count &gt;= total)
+    {
+        _departing = true;
+        Depart();
+    }
+    // Majority ready triggers a countdown rather than requiring unanimity,
+    // so one slow player can't hold the group hostage indefinitely.
+    else if (_readyClients.Count &gt; total / 2 && !CountdownActive.Value)
+    {
+        StartCoroutine(DepartureCountdown());
+    }
+}
+
+private IEnumerator DepartureCountdown()
+{
+    CountdownActive.Value = true;
+    Countdown.Value       = countdownSeconds;
+
+    while (Countdown.Value &gt; 0)
+    {
+        yield return new WaitForSeconds(1f);
+        if (_departing) yield break;
+        Countdown.Value--;
+
+        if (_readyClients.Count &gt;= NetworkManager.ConnectedClientsIds.Count)
+            break;
+    }
+
+    if (!_departing) { _departing = true; Depart(); }
+}
+				</code></pre>
+			  </div> 
+          </div>
+            
           </div>
         </div>
  
